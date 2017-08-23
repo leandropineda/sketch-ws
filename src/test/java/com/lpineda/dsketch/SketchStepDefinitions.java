@@ -3,7 +3,6 @@ package com.lpineda.dsketch;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.apache.commons.math3.distribution.BinomialDistribution;
 
 import java.util.*;
 import java.io.*;
@@ -24,7 +23,7 @@ public class SketchStepDefinitions {
     public void add_random_elements_to_the_sketch(Integer elements_) {
         Random rand = new Random();
         for (Integer i = 0; i < elements_; i++) {
-            sketch.addElement(rand.nextInt(Integer.MAX_VALUE));
+            sketch.addElement(rand.nextInt(sketch.max_key));
         }
     }
 

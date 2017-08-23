@@ -9,6 +9,7 @@ public class Sketch {
     private int w, d, p, max_bucket_length;
     private Map<Integer, Integer> hash_functions;
     private List<Bucket> matrix;
+    public int max_key;
 
     public Sketch(Integer d_, Integer w_, Integer p_) {
         w = w_;
@@ -17,8 +18,9 @@ public class Sketch {
         max_bucket_length = 8;
         assert (p >= w);
         assert (Primes.isPrime(p_));
-
+        max_key = Integer.MAX_VALUE / p;
         buildHashFunctions();
+
         matrix = new ArrayList<>();
         for (Integer i = 0; i< w*d; i++) {
             matrix.add(new Bucket(max_bucket_length));
@@ -31,7 +33,7 @@ public class Sketch {
             hash_functions.put(ThreadLocalRandom.current().nextInt(0, (p - 2)) + 1,
                     ThreadLocalRandom.current().nextInt(0, (p - 1)));
         }
-
+        assert (hash_functions.size() == d);
     }
 
     private int index(int i, int j) {
@@ -47,7 +49,7 @@ public class Sketch {
     }
 
     public void addElement(Integer element_) {
-        assert (hash_functions.size() == d);
+        assert (element_ < max_key);
         Integer row = 0;
         for (Map.Entry<Integer, Integer> hash_function: hash_functions.entrySet()) {
             Integer col = hashElement(hash_function, element_);

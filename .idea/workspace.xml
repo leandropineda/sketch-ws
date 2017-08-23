@@ -1,41 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4d157f88-a4c8-4b06-a831-64ac9e534aa2" name="Default" comment="Sketch implementation">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__info_cukes_cucumber_core_1_2_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__info_cukes_cucumber_html_0_2_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__info_cukes_cucumber_java8_1_2_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__info_cukes_cucumber_java_1_2_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__info_cukes_cucumber_junit_1_2_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__info_cukes_cucumber_jvm_deps_1_0_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__info_cukes_gherkin_2_12_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_math3_3_6_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Bucket.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Range.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Sketch.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/1000keys_100000elements.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/200keys_4000elements.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/BucketStepDefinitions.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/RunBucketTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/SketchStepDefinitions.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/resources/cucumber/bucket.feature" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/jni/Sketch.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/jni/sketch.dll" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/lpineda/dsketch/Main.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/lpineda/dsketch/MyResource.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/com/lpineda/dsketch/jni/Sketch.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/test-classes/com/lpineda/dsketch/MyResourceTest.class" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Main.java" afterPath="$PROJECT_DIR$/src/main/java/com/lpineda/webservice/Main.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/MyResource.java" afterPath="$PROJECT_DIR$/src/main/java/com/lpineda/webservice/MyResource.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/MyResourceTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/lpineda/webservice/MyResourceTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+    <list default="true" id="4d157f88-a4c8-4b06-a831-64ac9e534aa2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sketchws.iml" afterPath="$PROJECT_DIR$/sketchws.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Sketch.java" afterPath="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Sketch.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/SketchStepDefinitions.java" afterPath="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/SketchStepDefinitions.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature" afterPath="$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -61,11 +31,45 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="bucket.feature" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/resources/cucumber/bucket.feature">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-432">
+              <caret line="0" column="15" lean-forward="false" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RunBucketTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/RunBucketTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BucketStepDefinitions.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/BucketStepDefinitions.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1350">
+              <caret line="75" column="61" lean-forward="false" selection-start-line="75" selection-start-column="53" selection-end-line="75" selection-end-column="61" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="sketch.feature" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="19" column="66" lean-forward="true" selection-start-line="19" selection-start-column="66" selection-end-line="19" selection-end-column="66" />
+            <state relative-caret-position="108">
+              <caret line="6" column="11" lean-forward="true" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -74,8 +78,8 @@
       <file leaf-file-name="Sketch.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Sketch.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="81" column="15" lean-forward="false" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
+            <state relative-caret-position="-720">
+              <caret line="11" column="10" lean-forward="false" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -83,17 +87,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SketchStepDefinitions.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SketchStepDefinitions.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/SketchStepDefinitions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="51" column="10" lean-forward="false" selection-start-line="51" selection-start-column="10" selection-end-line="51" selection-end-column="10" />
+            <state relative-caret-position="360">
+              <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#602#603#0" expanded="true" />
-                <element signature="e#656#657#0" expanded="true" />
-                <element signature="e#1049#1050#0" expanded="true" />
-                <element signature="e#1114#1115#0" expanded="true" />
+                <element signature="e#535#536#0" expanded="true" />
+                <element signature="e#589#590#0" expanded="true" />
+                <element signature="e#979#980#0" expanded="true" />
+                <element signature="e#1044#1045#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -149,10 +153,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Bucket.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/4000.txt" />
         <option value="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/1000keys_100000elements.txt" />
-        <option value="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Sketch.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/200keys_4000elements.txt" />
-        <option value="$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature" />
+        <option value="$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Sketch.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/SketchStepDefinitions.java" />
+        <option value="$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature" />
       </list>
     </option>
   </component>
@@ -267,6 +271,45 @@
               <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
               <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="lpineda" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="lpineda" type="462c0819:PsiDirectoryNode" />
+              <item name="dsketch" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="lpineda" type="462c0819:PsiDirectoryNode" />
+              <item name="webservice" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -292,6 +335,21 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="lpineda" type="462c0819:PsiDirectoryNode" />
               <item name="dsketch" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sketch-ws" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sketch-ws" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="cucumber" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -343,7 +401,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Cucumber java.Scenario: get heavy hitters">
+  <component name="RunManager" selected="Cucumber java.Feature: bucket">
     <configuration name="Feature: bucket" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -671,9 +729,9 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Cucumber java.Scenario: get heavy hitters" />
+        <item index="0" class="java.lang.String" itemvalue="Cucumber java.Feature: bucket" />
         <item index="1" class="java.lang.String" itemvalue="Cucumber java.Feature: sketch" />
-        <item index="2" class="java.lang.String" itemvalue="Cucumber java.Feature: bucket" />
+        <item index="2" class="java.lang.String" itemvalue="Cucumber java.Scenario: get heavy hitters" />
         <item index="3" class="java.lang.String" itemvalue="Cucumber java.Scenario: estimate the frequency of an element" />
         <item index="4" class="java.lang.String" itemvalue="Cucumber java.Scenario: add multiple elements multiple times on a small bucket" />
       </list>
@@ -695,44 +753,52 @@
       <workItem from="1503173633871" duration="10415000" />
       <workItem from="1503209079772" duration="5601000" />
       <workItem from="1503214744568" duration="4073000" />
-      <workItem from="1503266117777" duration="40562000" />
+      <workItem from="1503266117777" duration="42716000" />
     </task>
+    <task id="LOCAL-00001" summary="Sketch implementation">
+      <created>1503473266122</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1503473266123</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 04m 01s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__bucket - 2017.08.23 at 04h 59m 03s.xml">
+      <configuration name="Feature: bucket" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 05m 27s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__bucket - 2017.08.23 at 05h 04m 00s.xml">
+      <configuration name="Feature: bucket" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 10m 49s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__bucket - 2017.08.23 at 05h 05m 16s.xml">
+      <configuration name="Feature: bucket" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 11m 45s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__bucket - 2017.08.23 at 05h 06m 54s.xml">
+      <configuration name="Feature: bucket" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 13m 11s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__bucket - 2017.08.23 at 05h 07m 11s.xml">
+      <configuration name="Feature: bucket" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 14m 29s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__sketch - 2017.08.23 at 04h 51m 15s.xml">
+      <configuration name="Feature: sketch" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 18m 07s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__sketch - 2017.08.23 at 04h 53m 47s.xml">
+      <configuration name="Feature: sketch" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 21m 02s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__sketch - 2017.08.23 at 04h 54m 51s.xml">
+      <configuration name="Feature: sketch" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 22m 32s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__sketch - 2017.08.23 at 04h 58m 11s.xml">
+      <configuration name="Feature: sketch" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
-    <history-entry file="Scenario__get_heavy_hitters - 2017.08.23 at 04h 22m 53s.xml">
-      <configuration name="Scenario: get heavy hitters" configurationId="CucumberJavaRunConfigurationType" />
+    <history-entry file="Feature__sketch - 2017.08.23 at 05h 05m 39s.xml">
+      <configuration name="Feature: sketch" configurationId="CucumberJavaRunConfigurationType" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60651000" />
+    <option name="totallyTimeSpent" value="62805000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1375" height="904" extended-state="6" />
@@ -778,7 +844,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Sketch implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sketch implementation" />
+    <MESSAGE value="Fixed test scenarios. Bucket may fail for random keys." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed test scenarios. Bucket may fail for random keys." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -795,6 +862,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="7" lean-forward="true" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -957,6 +1025,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="7" lean-forward="false" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1028,34 +1097,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/RunBucketTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/BucketStepDefinitions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/cucumber/bucket.feature">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="15" lean-forward="false" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1026">
@@ -1084,34 +1125,62 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/SketchStepDefinitions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="66" lean-forward="true" selection-start-line="19" selection-start-column="66" selection-end-line="19" selection-end-column="66" />
-          <folding />
+        <state relative-caret-position="360">
+          <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#535#536#0" expanded="true" />
+            <element signature="e#589#590#0" expanded="true" />
+            <element signature="e#979#980#0" expanded="true" />
+            <element signature="e#1044#1045#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/lpineda/dsketch/Sketch.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="81" column="15" lean-forward="false" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
+        <state relative-caret-position="-720">
+          <caret line="11" column="10" lean-forward="false" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/SketchStepDefinitions.java">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/cucumber/sketch.feature">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="51" column="10" lean-forward="false" selection-start-line="51" selection-start-column="10" selection-end-line="51" selection-end-column="10" />
+        <state relative-caret-position="108">
+          <caret line="6" column="11" lean-forward="true" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/cucumber/bucket.feature">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-432">
+          <caret line="0" column="15" lean-forward="false" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/RunBucketTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#602#603#0" expanded="true" />
-            <element signature="e#656#657#0" expanded="true" />
-            <element signature="e#1049#1050#0" expanded="true" />
-            <element signature="e#1114#1115#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/lpineda/dsketch/BucketStepDefinitions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1350">
+          <caret line="75" column="61" lean-forward="false" selection-start-line="75" selection-start-column="53" selection-end-line="75" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
