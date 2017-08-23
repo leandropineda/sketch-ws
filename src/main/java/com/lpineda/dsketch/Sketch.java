@@ -11,7 +11,7 @@ public class Sketch {
     private List<Bucket> matrix;
     public int max_key;
 
-    public Sketch(Integer d_, Integer w_, Integer p_) {
+    public Sketch(Integer d_, Integer w_, Integer p_, Map<Integer, Integer> hash_functions_) {
         w = w_;
         d = d_;
         p = p_;
@@ -19,7 +19,7 @@ public class Sketch {
         assert (p >= w);
         assert (Primes.isPrime(p_));
         max_key = Integer.MAX_VALUE / p;
-        buildHashFunctions();
+        hash_functions = hash_functions_;
 
         matrix = new ArrayList<>();
         for (Integer i = 0; i< w*d; i++) {
@@ -27,13 +27,14 @@ public class Sketch {
         }
     }
 
-    private void buildHashFunctions() {
-        hash_functions = new LinkedHashMap<>();
-        while (hash_functions.size() < d) {
-            hash_functions.put(ThreadLocalRandom.current().nextInt(0, (p - 2)) + 1,
-                    ThreadLocalRandom.current().nextInt(0, (p - 1)));
+    public static Map<Integer, Integer> buildHashFunctions(Integer n_functions, Integer max_constant_value) {
+        LinkedHashMap<Integer, Integer> hash_functions = new LinkedHashMap<>();
+        while (hash_functions.size() < n_functions) {
+            hash_functions.put(ThreadLocalRandom.current().nextInt(0, (max_constant_value - 2)) + 1,
+                    ThreadLocalRandom.current().nextInt(0, (max_constant_value - 1)));
         }
-        assert (hash_functions.size() == d);
+
+        return hash_functions;
     }
 
     private int index(int i, int j) {

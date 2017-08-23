@@ -3,6 +3,7 @@ package com.lpineda.dsketch;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import gherkin.lexer.Sk;
 
 import java.util.*;
 import java.io.*;
@@ -16,7 +17,7 @@ public class SketchStepDefinitions {
 
     @Given("^I create a sketch of dimensions (\\d+)x(\\d+) with a prime number p=(\\d+)$")
     public void create_a_sketch(Integer rows, Integer cols, Integer prime) {
-        sketch = new Sketch(rows, cols, prime);
+        sketch = new Sketch(rows, cols, prime, Sketch.buildHashFunctions(rows, prime));
     }
 
     @When("^I add (\\d+) random elements to the sketch$")
@@ -47,7 +48,7 @@ public class SketchStepDefinitions {
     @Then("^I obtain a heavy key (\\d+) exceeding the threshold (\\d+)$")
     public void check_heavy_hitter(Integer element, Integer threshold_) {
         HashSet<Integer> s = sketch.getHeavyHitters(threshold_);
-        System.out.println("Heavy hitters " + sketch.getHeavyHitters(threshold_));
+        //System.out.println("Heavy hitters " + sketch.getHeavyHitters(threshold_));
         //assertThat(s.size(), is(1));
         assertTrue(s.contains(element));
     }
