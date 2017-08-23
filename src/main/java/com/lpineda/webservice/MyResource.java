@@ -1,4 +1,4 @@
-package com.lpineda.dsketch;
+package com.lpineda.webservice;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

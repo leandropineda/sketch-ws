@@ -1,4 +1,4 @@
-package com.lpineda.dsketch;
+package com.lpineda.webservice;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
