@@ -20,6 +20,8 @@ public class Bucket {
         return processed_elements;
     }
 
+    public Long getError() { return err; }
+
     public Integer keySetSize() {
         return event_counter.keySet().size();
     }
@@ -69,7 +71,6 @@ public class Bucket {
             estimated_frequency.from = event_counter.get(element_);
         } else estimated_frequency.from = Long.valueOf(0);
         estimated_frequency.to = estimated_frequency.from + err;
-
         return estimated_frequency;
     }
 
