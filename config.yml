@@ -1,0 +1,24 @@
+sketchConfiguration:
+  width: 40
+  height: 5
+  prime: 1337
+
+logging:
+  loggers:
+    com.lpineda.dsketch: DEBUG
+
+redis:
+  # The redis server's address; required.
+  endpoint: localhost:6379
+  # Auth password for redis server connection.  (default: null)
+  password: null
+  # The minimum number of idle connections to maintain in the pool.  (default: 0)
+  minIdle: 0
+  # The maximum number of idle connections allowed in the pool.  (default: 0)
+  maxIdle: 0
+  # The maximum number of connections allowed in the pool.  (default: 1024)
+  maxTotal: 1924
+  # Enables SSL connection. (default: false)
+  ssl: false
+  # The configured timeout (in milliseconds) for redis connections in the connection pool.  (default: 2000)
+  timeout: 2000
