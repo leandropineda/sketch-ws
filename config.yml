@@ -5,7 +5,7 @@ sketchConfiguration:
 
 logging:
   loggers:
-    com.lpineda.dsketch: DEBUG
+    com.lpineda.dsketch: INFO
 
 redis:
   # The redis server's address; required.
@@ -22,3 +22,7 @@ redis:
   ssl: false
   # The configured timeout (in milliseconds) for redis connections in the connection pool.  (default: 2000)
   timeout: 2000
+
+server:
+  requestLog:
+      appenders: []
