@@ -11,3 +11,8 @@ buildNumber.properties
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 *.class
+
+ci/work/**
+misc/apache_logs/apache.log
+ci/event_receiver_tmp/
+misc/pcap/bigFlows.pcap

@@ -6,13 +6,14 @@ import json
 import os
 
 filename = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                        'smallFlows.pcap')
+                        'bigFlows.pcap')
 
 print "Using file " + filename
 headers = {
     'content-type': 'application/json'
     }
 
+c = 0
 for ts, pkt in dpkt.pcap.Reader(open(filename, 'r')):
     eth = dpkt.ethernet.Ethernet(pkt)
     if eth.type != dpkt.ethernet.ETH_TYPE_IP:
@@ -29,7 +30,10 @@ for ts, pkt in dpkt.pcap.Reader(open(filename, 'r')):
         event = {
             "event": flow
         }
-
+        c += 1
         requests.post('http://localhost:8080/event',
                       data=json.dumps(event),
                       headers=headers)
+
+        if (not (c % 1000)):
+            print "{} packets.".format(c)

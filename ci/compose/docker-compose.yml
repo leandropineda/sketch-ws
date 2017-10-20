@@ -1,0 +1,11 @@
+version: '3'
+services:
+  receiver:
+    image: event_receiver
+    ports:
+    - "8080:8080"
+    - "8081:8081"
+    links:
+    - redis
+  redis:
+    image: redis

@@ -2,7 +2,7 @@ package com.lpineda.dsketch.resources;
 
 import com.lpineda.dsketch.api.Event;
 import com.lpineda.dsketch.api.Mapping;
-import com.lpineda.dsketch.db.SketchCache;
+import com.lpineda.dsketch.db.SketchFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,17 +21,27 @@ import java.util.concurrent.ExecutionException;
 @Produces(MediaType.APPLICATION_JSON)
 public class EventResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EventResource.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(EventResource.class);
 
-    private final SketchCache sketchCache;
+    private final SketchFactory sketchFactory;
 
-    public EventResource(SketchCache sketchCache) {
-        this.sketchCache = sketchCache;
+    public EventResource(SketchFactory sketchFactory) {
+        this.sketchFactory = sketchFactory;
     }
 
     @POST
-    public Mapping addEvent(@Valid Event event) throws ExecutionException {
-        return sketchCache.addElement(event.getEvent());
+    public Mapping addEvent(@Valid Event event) {
+        Mapping return_mapping;
+        try {
+            return_mapping = sketchFactory.addEvent(event.getEvent());
+            LOGGER.debug("Event " + return_mapping.getEvent() + " is mapped with " + return_mapping.getMapping());
+        } catch (ExecutionException ex) {
+            LOGGER.error("Something went wrong when adding element " + event.getEvent());
+            LOGGER.error(ex.getMessage());
+        } finally {
+            return_mapping = new Mapping(event.getEvent(), "null");
+        }
+        return return_mapping;
     }
 }
 

@@ -1,15 +1,14 @@
 package com.lpineda.dsketch;
 
 import com.lpineda.dsketch.core.Sketch;
-import com.lpineda.dsketch.db.RedisMappings;
-import com.lpineda.dsketch.db.SketchCache;
+import com.lpineda.dsketch.db.EventMapping;
+import com.lpineda.dsketch.db.SketchFactory;
 import com.lpineda.dsketch.resources.EventResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
 
 import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
@@ -25,11 +24,12 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventReceiverApplication.class);
 
-    private Jedis jedis = new Jedis("0.0.0.0");
-    private RedisMappings mappings = new RedisMappings(jedis);
-    private SketchCache sketchCache = new SketchCache(mappings);
+    private EventMapping mappings;
+    private SketchFactory sketchFactory;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    private Sketch old_sketch;
 
     @Override
     public String getName() {
@@ -38,29 +38,51 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
     @Override
     public void initialize(Bootstrap<EventReceiverConfiguration> bootstrap) {
-
-        final Runnable cleanUp = new Runnable() {
-            public void run() {
-                try {
-                    Sketch sketch = sketchCache.getSketch();
-                    HashSet<Integer> heavy_hitters = sketch.getHeavyHitters((int)Math.round(sketch.getBiggestBucketCounter() * .8));
-                    LOGGER.info("Heavy hitters: " + mappings.getMappings(heavy_hitters));
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                sketchCache.invalidateSketch();
-            }
-        };
-
-        Long sketchKeepAlive = (long)2;
-        scheduler.scheduleAtFixedRate   (cleanUp, sketchKeepAlive, sketchKeepAlive, SECONDS);
-
     }
 
     @Override
     public void run(EventReceiverConfiguration configuration, Environment environment) {
-        final EventResource resource = new EventResource(this.sketchCache);
+
+        LOGGER.info("Initializing DB connection");
+        mappings = configuration.getEventMapping();
+        mappings.connect();
+        LOGGER.info("Initializing Sketch factory");
+        sketchFactory = configuration.getSketchFactory();
+        sketchFactory.setMappings(mappings);
+        try {
+            old_sketch = sketchFactory.getSketch();
+        } catch (ExecutionException ex) {
+            LOGGER.error(ex.getMessage());
+        }
+
+        final Runnable cleanUp = new Runnable() {
+            public void run() {
+
+                try {
+                    Sketch sketch = sketchFactory.getSketch();
+                    HashSet<Integer> heavy_hitters = sketch.getHeavyHitters(configuration.getDetectionParameters().getHeavy_hitter_threshold());
+                    LOGGER.info("Heavy hitters: " + mappings.getMappings(heavy_hitters));
+                    HashSet<Integer> heavy_changers = sketch.getHeavyChangers(configuration.getDetectionParameters().getHeavy_changer_threshold(), old_sketch);
+                    LOGGER.info("Heavy changers: " + mappings.getMappings(heavy_changers));
+                    old_sketch = sketch;
+
+                    sketchFactory.invalidateSketch();
+                } catch (Exception ex ) {
+                    LOGGER.error(ex.getMessage());
+                }
+
+            }
+        };
+
+        Long sketchKeepAlive = configuration.getDetectionParameters().getSketch_clean_up_interval();
+        scheduler.scheduleAtFixedRate(cleanUp, sketchKeepAlive, sketchKeepAlive, SECONDS);
+
+        final EventResource resource = new EventResource(sketchFactory);
+        environment.healthChecks().register("SketchFactory", new SketchFactoryHealthCheck(sketchFactory));
+        environment.healthChecks().register("EventMapping", new EventMappingHealthCheck(mappings));
+        environment.healthChecks().register("DetectionParameters", new DetectionParametersHealthCheck(configuration.getDetectionParameters()));
         environment.jersey().register(resource);
+
     }
 
     public static void main(String[] args) throws Exception {

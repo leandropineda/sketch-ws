@@ -11,6 +11,11 @@ public class Mapping {
 
     private String mapping;
 
+    public Mapping(String event, Integer mapping) {
+        this.event = event;
+        this.mapping = String.valueOf(mapping);
+    }
+
     public Mapping(String event, String mapping) {
         this.event = event;
         this.mapping = mapping;
