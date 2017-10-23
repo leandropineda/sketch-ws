@@ -1,8 +1,10 @@
+"""apache_log parser."""
 import re
 import requests
 import json
 
-with open('/home/leandro/workspace/sketch-ws/misc/apache_logs/apache.log', 'r') as fd_logs:
+with open('/home/leandro/workspace/sketch-ws/misc/apache_logs/apache.log',
+          'r') as fd_logs:
     log_file = fd_logs.readlines()
 
 """
