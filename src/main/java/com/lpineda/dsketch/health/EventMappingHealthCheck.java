@@ -1,4 +1,4 @@
-package com.lpineda.dsketch;
+package com.lpineda.dsketch.health;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.lpineda.dsketch.db.EventMapping;

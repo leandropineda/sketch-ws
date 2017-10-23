@@ -37,10 +37,6 @@ public class SketchFactory {
     @JsonProperty
     private Integer prime;
 
-    @NotNull
-    @JsonProperty
-    private Integer heavy_hitter_threshold;
-
     private LoadingCache<Integer, Sketch> sketch_cache =
             CacheBuilder.newBuilder()
                     .maximumSize(1)
@@ -67,10 +63,6 @@ public class SketchFactory {
 
     public void setPrime(Integer prime) { this.prime = prime; }
     public Integer getPrime() { return prime; }
-
-    public void setHeavyHitterThreshold(Integer prime) { this.heavy_hitter_threshold = heavy_hitter_threshold; }
-    public Integer getHeavyHitterThreshold() { return heavy_hitter_threshold; }
-
 
     private Sketch build() {
         //TODO: Read sketch configuration from an external place instead of using a config file

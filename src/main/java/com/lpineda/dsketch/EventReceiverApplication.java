@@ -3,6 +3,9 @@ package com.lpineda.dsketch;
 import com.lpineda.dsketch.core.Sketch;
 import com.lpineda.dsketch.db.EventMapping;
 import com.lpineda.dsketch.db.SketchFactory;
+import com.lpineda.dsketch.health.DetectionParametersHealthCheck;
+import com.lpineda.dsketch.health.EventMappingHealthCheck;
+import com.lpineda.dsketch.health.SketchFactoryHealthCheck;
 import com.lpineda.dsketch.resources.EventResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -14,6 +17,7 @@ import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -30,6 +34,8 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private Sketch old_sketch;
+
+    private AtomicLong sketch_counter = new AtomicLong(0);
 
     @Override
     public String getName() {
@@ -60,10 +66,13 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
                 try {
                     Sketch sketch = sketchFactory.getSketch();
-                    HashSet<Integer> heavy_hitters = sketch.getHeavyHitters(configuration.getDetectionParameters().getHeavy_hitter_threshold());
-                    LOGGER.info("Heavy hitters: " + mappings.getMappings(heavy_hitters));
-                    HashSet<Integer> heavy_changers = sketch.getHeavyChangers(configuration.getDetectionParameters().getHeavy_changer_threshold(), old_sketch);
-                    LOGGER.info("Heavy changers: " + mappings.getMappings(heavy_changers));
+                    HashSet<Integer> heavy_hitters =
+                            sketch.getHeavyHitters(configuration.getDetectionParameters().getHeavy_hitter_threshold());
+                    HashSet<Integer> heavy_changers =
+                            sketch.getHeavyChangers(configuration.getDetectionParameters().getHeavy_changer_threshold(), old_sketch);
+                    LOGGER.info("["+ sketch_counter.getAndIncrement() +"]" +
+                            " Heavy hitters: " + mappings.getMappings(heavy_hitters) +
+                            " Heavy changers: " + mappings.getMappings(heavy_changers));
                     old_sketch = sketch;
 
                     sketchFactory.invalidateSketch();
