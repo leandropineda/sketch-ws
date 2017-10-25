@@ -6,6 +6,8 @@ import com.google.common.cache.*;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.lpineda.dsketch.api.Mapping;
@@ -16,6 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.validation.constraints.NotNull;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Created by leandro on 02/09/17.
@@ -47,13 +51,18 @@ public class SketchFactory implements Runnable {
                         }
                     });
 
+    public SketchFactory(SketchParameters sketchParameters) {
+        this.sketchParameters = sketchParameters;
+        this.old_sketch = build();
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(this,
+                sketchParameters.getSketchCleanUpInterval(),
+                sketchParameters.getSketchCleanUpInterval(),
+                SECONDS);
+    }
 
     public void setMappings(EventMapping mappings_db) {
         this.mappings_db = mappings_db;
-    }
-    public void setSketchParameters(SketchParameters sketchParameters) {
-        this.sketchParameters = sketchParameters;
-        this.old_sketch = build();
     }
 
     private Sketch build() {
@@ -70,13 +79,13 @@ public class SketchFactory implements Runnable {
     }
 
     public void run() {
-
         try {
-            Sketch sketch = build();
+            Sketch sketch = getSketch();
+            LOGGER.info("" + sketchParameters.getHeavyChangerThreshold());
             HashSet<Integer> heavy_hitters =
-                    sketch.getHeavyHitters(sketchParameters.getHeavy_hitter_threshold());
+                    sketch.getHeavyHitters(sketchParameters.getHeavyHitterThreshold());
             HashSet<Integer> heavy_changers =
-                    sketch.getHeavyChangers(sketchParameters.getHeavy_changer_threshold(), old_sketch);
+                    sketch.getHeavyChangers(sketchParameters.getHeavyChangerThreshold(), old_sketch);
             LOGGER.info("["+ sketch_counter.getAndIncrement() +"]" +
                     " Heavy hitters: " + mappings_db.getMappings(heavy_hitters) +
                     " Heavy changers: " + mappings_db.getMappings(heavy_changers));
@@ -86,10 +95,9 @@ public class SketchFactory implements Runnable {
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage());
             ex.printStackTrace();
-
         }
-
     }
+
     public Mapping addEvent(String event) throws ExecutionException {
         Integer mapping = Integer.valueOf(this.mappings_db.get(event));
         getSketch().addElement(mapping);

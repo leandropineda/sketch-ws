@@ -2,9 +2,9 @@ sketchParameters:
   rows: 40
   cols: 5
   prime: 1337
-  heavy_hitter_threshold: 100
-  heavy_changer_threshold: 50
-  sketch_clean_up_interval: 3
+  heavyHitterThreshold: 100
+  heavyChangerThreshold: 50
+  sketchCleanUpInterval: 3
 
 logging:
   level: INFO
