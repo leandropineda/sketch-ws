@@ -1,11 +1,14 @@
+/*
 package com.lpineda.dsketch.health;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.lpineda.dsketch.db.SketchFactory;
 
+*/
 /**
  * Created by leandro on 10/10/17.
- */
+ *//*
+
 public class SketchFactoryHealthCheck extends HealthCheck {
 
     private final SketchFactory sketchFactory;
@@ -24,3 +27,4 @@ public class SketchFactoryHealthCheck extends HealthCheck {
         return Result.unhealthy("Error message");
     }
 }
+*/

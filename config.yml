@@ -1,9 +1,7 @@
-sketch:
+sketchParameters:
   rows: 40
   cols: 5
   prime: 1337
-
-detection_parameters:
   heavy_hitter_threshold: 100
   heavy_changer_threshold: 50
   sketch_clean_up_interval: 3
