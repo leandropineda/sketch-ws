@@ -81,7 +81,6 @@ public class SketchFactory implements Runnable {
     public void run() {
         try {
             Sketch sketch = getSketch();
-            LOGGER.info("" + sketchParameters.getHeavyChangerThreshold());
             HashSet<Integer> heavy_hitters =
                     sketch.getHeavyHitters(sketchParameters.getHeavyHitterThreshold());
             HashSet<Integer> heavy_changers =
