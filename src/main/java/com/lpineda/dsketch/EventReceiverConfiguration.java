@@ -4,7 +4,7 @@ package com.lpineda.dsketch;
  * Created by leandro on 01/09/17.
  */
 
-import com.lpineda.dsketch.api.DetectionParameters;
+import com.lpineda.dsketch.api.SketchParameters;
 import com.lpineda.dsketch.db.EventMapping;
 import com.lpineda.dsketch.db.SketchFactory;
 import io.dropwizard.Configuration;
@@ -18,11 +18,7 @@ public class EventReceiverConfiguration extends Configuration {
     private EventMapping eventMapping;
 
     @NotNull
-    private SketchFactory sketchFactory;
-
-    @NotNull
-    private DetectionParameters detectionParameters;
-
+    private SketchParameters sketchParameters;
 
     @JsonProperty("redis")
     public EventMapping getEventMapping() { return this.eventMapping; }
@@ -32,18 +28,12 @@ public class EventReceiverConfiguration extends Configuration {
         this.eventMapping = eventMapping;
     }
 
-    @JsonProperty("sketch")
-    public SketchFactory getSketchFactory() {
-        return this.sketchFactory;
+    @JsonProperty("sketchParameters")
+    public SketchParameters getSketchParameters() {
+        return this.sketchParameters;
     }
 
-    @JsonProperty("sketch")
-    public void setSketchFactory(SketchFactory sketchFactory) { this.sketchFactory = sketchFactory; }
-
-    @JsonProperty("detection_parameters")
-    public DetectionParameters getDetectionParameters() { return this.detectionParameters; }
-
-    @JsonProperty("detection_parameters")
-    public void setDetectionParameters(DetectionParameters detectionParameters) { this.detectionParameters = detectionParameters; }
+    @JsonProperty("sketchParameters")
+    public void setSketchParameters(SketchParameters sketchParameters) { this.sketchParameters = sketchParameters; }
 
 }

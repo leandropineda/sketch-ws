@@ -3,7 +3,6 @@ package com.lpineda.dsketch.db;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.cache.*;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -11,7 +10,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
