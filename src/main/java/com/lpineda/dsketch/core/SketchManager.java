@@ -38,6 +38,7 @@ public class SketchManager {
 
         CacheLoader<Integer, Sketch> loader = new CacheLoader<Integer, Sketch>() {
             public Sketch load(Integer key) throws Exception {
+                LOGGER.debug("Building sketch");
                 return buildSketch();
             }
         };
@@ -68,6 +69,7 @@ public class SketchManager {
 
     protected void invalidateSketch() throws ExecutionException {
         this.sketch_cache.invalidate(0);
+        this.sketch_cache.get(0);
     }
 
     public Mapping addEvent(String event) throws ExecutionException {
