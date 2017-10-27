@@ -6,7 +6,6 @@ package com.lpineda.dsketch;
 
 import com.lpineda.dsketch.api.SketchParameters;
 import com.lpineda.dsketch.db.EventMapping;
-import com.lpineda.dsketch.db.SketchFactory;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

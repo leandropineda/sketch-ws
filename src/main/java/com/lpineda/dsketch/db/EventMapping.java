@@ -84,7 +84,7 @@ public class EventMapping {
         }
     }
 
-    String get(String key) {
+    public String get(String key) {
         try {
             return jedis_cache.get(key);
         } catch (ExecutionException ex) {

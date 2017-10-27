@@ -1,8 +1,11 @@
 package com.lpineda.dsketch;
 
 import com.lpineda.dsketch.api.SketchParameters;
+import com.lpineda.dsketch.core.HeavyKeyDetection;
+import com.lpineda.dsketch.core.SketchHistory;
+import com.lpineda.dsketch.core.SketchManager;
+import com.lpineda.dsketch.core.SketchScheduler;
 import com.lpineda.dsketch.db.EventMapping;
-import com.lpineda.dsketch.db.SketchFactory;
 import com.lpineda.dsketch.health.EventMappingHealthCheck;
 import com.lpineda.dsketch.health.SketchParametersHealthCheck;
 import com.lpineda.dsketch.resources.EventResource;
@@ -33,15 +36,27 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
         SketchParameters sketchParameters = configuration.getSketchParameters();
         LOGGER.info("Initializing DB connection");
-        EventMapping mappings = configuration.getEventMapping();
-        mappings.connect();
-        LOGGER.info("Initializing Sketch factory");
-        SketchFactory sketchFactory = new SketchFactory(sketchParameters);
-        sketchFactory.setMappings(mappings);
+        EventMapping eventMapping = configuration.getEventMapping();
+        eventMapping.connect();
+        LOGGER.info("Initializing Sketch Manager");
+        SketchHistory sketchHistory = new SketchHistory();
 
-        final EventResource resource = new EventResource(sketchFactory);
+        SketchManager sketchManager = new SketchManager(sketchParameters);
+        sketchManager.setSketchHistory(sketchHistory);
+        sketchManager.setEventMapping(eventMapping);
+
+        HeavyKeyDetection heavyKeyDetection = new HeavyKeyDetection(sketchParameters);
+        heavyKeyDetection.setEventMapping(eventMapping);
+        heavyKeyDetection.setSketchHistory(sketchHistory);
+
+        SketchScheduler sketchScheduler = new SketchScheduler(sketchParameters);
+        sketchScheduler.setSketchManager(sketchManager);
+        sketchScheduler.setHeavyKeyDetection(heavyKeyDetection);
+        sketchScheduler.start();
+
+        final EventResource resource = new EventResource(sketchManager);
         environment.healthChecks().register("SketchParameters", new SketchParametersHealthCheck(sketchParameters));
-        environment.healthChecks().register("EventMapping", new EventMappingHealthCheck(mappings));
+        environment.healthChecks().register("EventMapping", new EventMappingHealthCheck(eventMapping));
         environment.jersey().register(resource);
 
     }

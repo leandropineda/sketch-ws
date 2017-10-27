@@ -4,7 +4,7 @@ sketchParameters:
   prime: 1337
   heavyHitterThreshold: 100
   heavyChangerThreshold: 50
-  sketchCleanUpInterval: 3
+  sketchCleanUpInterval: 1
 
 logging:
   level: INFO

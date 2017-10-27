@@ -2,7 +2,6 @@ package com.lpineda.dsketch.health;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.lpineda.dsketch.api.SketchParameters;
-import com.lpineda.dsketch.db.SketchFactory;
 
 /**
  * Created by leandro on 10/10/17.
