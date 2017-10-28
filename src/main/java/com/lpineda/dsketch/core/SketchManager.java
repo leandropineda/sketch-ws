@@ -3,11 +3,10 @@ package com.lpineda.dsketch.core;
 import com.google.common.cache.*;
 import com.lpineda.dsketch.api.Mapping;
 import com.lpineda.dsketch.api.SketchParameters;
-import com.lpineda.dsketch.db.EventMapping;
+import com.lpineda.dsketch.db.KeyValueTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -15,46 +14,42 @@ import java.util.concurrent.ExecutionException;
  * Created by leandro on 25/10/17.
  */
 
-@ParametersAreNonnullByDefault
 public class SketchManager {
+
+    public interface RotationListener {
+        void onRotation(Sketch sketch);
+    }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SketchManager.class);
 
-    private SketchParameters sketchParameters;
+    private final SketchParameters sketchParameters;
 
-    private LoadingCache<Integer, Sketch> sketch_cache;
-    private SketchHistory sketchHistory;
-    private EventMapping eventMapping;
+    private final KeyValueTransformer keyValueTransformer;
 
-    public SketchManager(SketchParameters sketchParameters) {
+    private final LoadingCache<Integer, Sketch> sketchCache;
+
+    public SketchManager(SketchParameters sketchParameters,
+                         RotationListener rotationListener,
+                         KeyValueTransformer keyValueTransformer) {
         this.sketchParameters = sketchParameters;
+        this.keyValueTransformer = keyValueTransformer;
 
         RemovalListener<Integer, Sketch> listener = new RemovalListener<Integer, Sketch>() {
             public void onRemoval(RemovalNotification<Integer, Sketch> notification) {
-                LOGGER.info("Removing sketch");
-                sketchHistory.addSketch(notification.getValue());
+                rotationListener.onRotation(notification.getValue());
             }
         };
 
         CacheLoader<Integer, Sketch> loader = new CacheLoader<Integer, Sketch>() {
             public Sketch load(Integer key) throws Exception {
-                LOGGER.debug("Building sketch");
                 return buildSketch();
             }
         };
 
-        sketch_cache = CacheBuilder.newBuilder()
+        sketchCache = CacheBuilder.newBuilder()
                 .maximumSize(1)
                 .removalListener(listener)
                 .build(loader);
-    }
-
-    public void setSketchHistory(SketchHistory sketchHistory) {
-        this.sketchHistory = sketchHistory;
-    }
-
-    public void setEventMapping(EventMapping eventMapping) {
-        this.eventMapping = eventMapping;
     }
 
     private Sketch buildSketch() {
@@ -67,15 +62,19 @@ public class SketchManager {
                 hash_functions);
     }
 
-    protected void invalidateSketch() throws ExecutionException {
-        this.sketch_cache.invalidate(0);
-        this.sketch_cache.get(0);
+    protected void rotateSketch()  {
+        try {
+            this.sketchCache.invalidate(0);
+            this.sketchCache.get(0);
+        } catch (ExecutionException ex) {
+            LOGGER.error(ex.getMessage());
+        }
     }
 
     public Mapping addEvent(String event) throws ExecutionException {
-        Integer mapping = Integer.valueOf(this.eventMapping.get(event));
-        sketch_cache.get(0).addElement(mapping);
-        return new Mapping(event, mapping);
+        Integer mapping = keyValueTransformer.getIntegerFromString(event);
+        sketchCache.get(0).addElement(mapping);
+        return new Mapping(event, String.valueOf(mapping));
 
     }
 

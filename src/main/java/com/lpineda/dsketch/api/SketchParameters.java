@@ -1,9 +1,5 @@
 package com.lpineda.dsketch.api;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.validation.constraints.NotNull;
-
 /**
  * Created by leandro on 24/10/17.
  */

@@ -1,7 +1,7 @@
 package com.lpineda.dsketch.core;
 
 import com.lpineda.dsketch.api.SketchParameters;
-import com.lpineda.dsketch.db.EventMapping;
+import com.lpineda.dsketch.db.KeyValueTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,24 +15,21 @@ public class HeavyKeyDetection {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeavyKeyDetection.class);
 
     private SketchParameters sketchParameters;
-    private EventMapping eventMapping;
+    private KeyValueTransformer keyValueTransformer;
     private SketchHistory sketchHistory;
 
-    public HeavyKeyDetection(SketchParameters sketchParameters) {
+    public HeavyKeyDetection(SketchParameters sketchParameters,
+                             KeyValueTransformer keyValueTransformer,
+                             SketchHistory sketchHistory) {
         this.sketchParameters = sketchParameters;
-    }
-
-    public void setEventMapping(EventMapping eventMapping) {
-        this.eventMapping = eventMapping;
-    }
-
-    public void setSketchHistory(SketchHistory sketchHistory) {
+        this.keyValueTransformer = keyValueTransformer;
         this.sketchHistory = sketchHistory;
     }
 
+
     public void detectHeavyKeys() {
-        LOGGER.info("Sketch History " + sketchHistory.getCounter());
         if (this.sketchHistory.getCounter() < 2) {
+            LOGGER.info("Not enough data to detect heavy keys.");
             return;
         }
         Sketch sketch = this.sketchHistory.getSketch(0);
@@ -42,8 +39,8 @@ public class HeavyKeyDetection {
         HashSet<Integer> heavy_changers =
                 sketch.getHeavyChangers(sketchParameters.getHeavyChangerThreshold(), old_sketch);
         LOGGER.info("["+ sketchHistory.getCounter() +"]" +
-                " Heavy hitters: " + eventMapping.getMappings(heavy_hitters) +
-                " Heavy changers: " + eventMapping.getMappings(heavy_changers));
+                " Heavy hitters: " + keyValueTransformer.getStringFromInteger(heavy_hitters) +
+                " Heavy changers: "  + keyValueTransformer.getStringFromInteger(heavy_changers));
 
     }
 }

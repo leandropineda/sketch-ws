@@ -1,12 +1,10 @@
 package com.lpineda.dsketch;
 
 import com.lpineda.dsketch.api.SketchParameters;
-import com.lpineda.dsketch.core.HeavyKeyDetection;
-import com.lpineda.dsketch.core.SketchHistory;
-import com.lpineda.dsketch.core.SketchManager;
-import com.lpineda.dsketch.core.SketchScheduler;
-import com.lpineda.dsketch.db.EventMapping;
-import com.lpineda.dsketch.health.EventMappingHealthCheck;
+import com.lpineda.dsketch.core.*;
+import com.lpineda.dsketch.db.RedisManager;
+import com.lpineda.dsketch.db.KeyValueTransformer;
+import com.lpineda.dsketch.health.StringMappingHealthCheck;
 import com.lpineda.dsketch.health.SketchParametersHealthCheck;
 import com.lpineda.dsketch.resources.EventResource;
 import io.dropwizard.Application;
@@ -14,6 +12,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * Created by leandro on 02/09/17.
@@ -36,27 +36,39 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
         SketchParameters sketchParameters = configuration.getSketchParameters();
         LOGGER.info("Initializing DB connection");
-        EventMapping eventMapping = configuration.getEventMapping();
-        eventMapping.connect();
+        RedisManager redisManager = new RedisManager(configuration.getDbConfig().getAddress());
+
+        KeyValueTransformer keyValueTransformer = new KeyValueTransformer() {
+            @Override
+            public Integer getIntegerFromString(String value) {
+                return redisManager.getValue(value);
+            }
+
+            @Override
+            public Set<String> getStringFromInteger(Set<Integer> values) {
+                return redisManager.getStringMappings(values);
+            }
+        };
+
         LOGGER.info("Initializing Sketch Manager");
         SketchHistory sketchHistory = new SketchHistory();
 
-        SketchManager sketchManager = new SketchManager(sketchParameters);
-        sketchManager.setSketchHistory(sketchHistory);
-        sketchManager.setEventMapping(eventMapping);
+        SketchManager sketchManager = new SketchManager(sketchParameters,
+                new SketchManager.RotationListener() {
+                    @Override
+                    public void onRotation(final Sketch sketch) {
+                        sketchHistory.addSketch(sketch);
+                    }
+                }, keyValueTransformer);
 
-        HeavyKeyDetection heavyKeyDetection = new HeavyKeyDetection(sketchParameters);
-        heavyKeyDetection.setEventMapping(eventMapping);
-        heavyKeyDetection.setSketchHistory(sketchHistory);
+        HeavyKeyDetection heavyKeyDetection = new HeavyKeyDetection(sketchParameters, keyValueTransformer, sketchHistory);
 
-        SketchScheduler sketchScheduler = new SketchScheduler(sketchParameters);
-        sketchScheduler.setSketchManager(sketchManager);
-        sketchScheduler.setHeavyKeyDetection(heavyKeyDetection);
-        sketchScheduler.start();
+        DetectionScheduler detectionScheduler = new DetectionScheduler(sketchParameters, sketchManager, heavyKeyDetection);
+        detectionScheduler.start();
 
         final EventResource resource = new EventResource(sketchManager);
         environment.healthChecks().register("SketchParameters", new SketchParametersHealthCheck(sketchParameters));
-        environment.healthChecks().register("EventMapping", new EventMappingHealthCheck(eventMapping));
+        environment.healthChecks().register("RedisManager", new StringMappingHealthCheck(redisManager));
         environment.jersey().register(resource);
 
     }

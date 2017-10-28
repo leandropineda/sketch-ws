@@ -4,8 +4,8 @@ package com.lpineda.dsketch;
  * Created by leandro on 01/09/17.
  */
 
+import com.lpineda.dsketch.api.DbConfig;
 import com.lpineda.dsketch.api.SketchParameters;
-import com.lpineda.dsketch.db.EventMapping;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,17 +14,17 @@ import javax.validation.constraints.NotNull;
 public class EventReceiverConfiguration extends Configuration {
 
     @NotNull
-    private EventMapping eventMapping;
+    private DbConfig dbConfig;
 
     @NotNull
     private SketchParameters sketchParameters;
 
-    @JsonProperty("redis")
-    public EventMapping getEventMapping() { return this.eventMapping; }
+    @JsonProperty("database")
+    public DbConfig getDbConfig() { return this.dbConfig; }
 
-    @JsonProperty("redis")
-    public void setEventMapping(EventMapping eventMapping) {
-        this.eventMapping = eventMapping;
+    @JsonProperty("database")
+    public void setDbConfig(DbConfig dbConfig) {
+        this.dbConfig = dbConfig;
     }
 
     @JsonProperty("sketchParameters")

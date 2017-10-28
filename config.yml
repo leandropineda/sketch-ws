@@ -4,7 +4,7 @@ sketchParameters:
   prime: 1337
   heavyHitterThreshold: 100
   heavyChangerThreshold: 50
-  sketchCleanUpInterval: 1
+  sketchCleanUpInterval: 3
 
 logging:
   level: INFO
@@ -27,6 +27,6 @@ server:
 
 
 #docker run --rm --name redis -p 6379:6379 redis
-redis:
+database:
   # The redis server's address; required.
-  db_address: "redis"
+  address: "localhost"
