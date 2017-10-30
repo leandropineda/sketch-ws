@@ -9,6 +9,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,7 @@ public class RedisManager {
     private final LoadingCache<String, Long> db_cache;
 
     public RedisManager(String db_address) {
+        LOGGER.info(MessageFormat.format("Initializing {0}", RedisManager.class.getName()));
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(128);
         poolConfig.setMaxIdle(128);

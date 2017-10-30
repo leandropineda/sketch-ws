@@ -6,11 +6,11 @@ import com.lpineda.dsketch.db.RedisManager;
 /**
  * Created by leandro on 11/10/17.
  */
-public class StringMappingHealthCheck extends HealthCheck {
+public class RedisHealthCheck extends HealthCheck {
 
     private final RedisManager redisManager;
 
-    public StringMappingHealthCheck(RedisManager redisManager) {
+    public RedisHealthCheck(RedisManager redisManager) {
         this.redisManager = redisManager;
 
     }
@@ -23,7 +23,7 @@ public class StringMappingHealthCheck extends HealthCheck {
         } catch (Exception ex) {
             return Result.unhealthy(ex.getMessage());
         }
-        return Result.healthy("Keys: " + String.valueOf(redisManager.getKeySetCardinality()));
+        return Result.healthy();
     }
 
 }

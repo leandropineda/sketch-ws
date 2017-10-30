@@ -2,7 +2,7 @@ package com.lpineda.dsketch.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DbConfig {
+public class DatabaseConfig {
     @JsonProperty
     private String address;
 

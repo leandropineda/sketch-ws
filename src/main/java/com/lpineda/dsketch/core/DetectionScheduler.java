@@ -1,6 +1,6 @@
 package com.lpineda.dsketch.core;
 
-import com.lpineda.dsketch.api.SketchParameters;
+import com.lpineda.dsketch.api.DetectionParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,30 +15,30 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class DetectionScheduler {
     private static final Logger LOGGER = LoggerFactory.getLogger(DetectionScheduler.class);
 
-    private final SketchParameters sketchParameters;
+    private final DetectionParameters detectionParameters;
     private final SketchManager sketchManager;
-    private HeavyKeyDetection heavyKeyDetection;
+    private HeavyKeyDetector heavyKeyDetector;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public DetectionScheduler(SketchParameters sketchParameters,
+    public DetectionScheduler(DetectionParameters detectionParameters,
                               SketchManager sketchManager,
-                              HeavyKeyDetection heavyKeyDetection) {
-        this.sketchParameters = sketchParameters;
+                              HeavyKeyDetector heavyKeyDetector) {
+        this.detectionParameters = detectionParameters;
         this.sketchManager = sketchManager;
-        this.heavyKeyDetection = heavyKeyDetection;
+        this.heavyKeyDetector = heavyKeyDetector;
     }
 
     public void start() {
         final Runnable detectHeavyKeys = new Runnable() {
             public void run() {
                 sketchManager.rotateSketch();
-                heavyKeyDetection.detectHeavyKeys();
+                heavyKeyDetector.detectHeavyKeys();
             }
         };
 
         scheduler.scheduleAtFixedRate(detectHeavyKeys,
-                sketchParameters.getSketchCleanUpInterval(),
-                sketchParameters.getSketchCleanUpInterval(),
+                detectionParameters.getSketchRotationInterval(),
+                detectionParameters.getSketchRotationInterval(),
                 SECONDS);
 
     }

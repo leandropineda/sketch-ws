@@ -1,10 +1,12 @@
-sketchParameters:
+sketchConfig:
   rows: 40
   cols: 5
   prime: 1337
+detectionParameters:
   heavyHitterThreshold: 100
   heavyChangerThreshold: 50
-  sketchCleanUpInterval: 3
+  sketchRotationInterval: 3
+  heavyKeyHistoryMaxLength: 1000
 
 logging:
   level: INFO

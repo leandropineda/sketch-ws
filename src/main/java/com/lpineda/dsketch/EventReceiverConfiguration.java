@@ -4,8 +4,9 @@ package com.lpineda.dsketch;
  * Created by leandro on 01/09/17.
  */
 
-import com.lpineda.dsketch.api.DbConfig;
-import com.lpineda.dsketch.api.SketchParameters;
+import com.lpineda.dsketch.api.DatabaseConfig;
+import com.lpineda.dsketch.api.DetectionParameters;
+import com.lpineda.dsketch.api.SketchConfig;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,25 +15,36 @@ import javax.validation.constraints.NotNull;
 public class EventReceiverConfiguration extends Configuration {
 
     @NotNull
-    private DbConfig dbConfig;
+    private DatabaseConfig databaseConfig;
 
     @NotNull
-    private SketchParameters sketchParameters;
+    private SketchConfig sketchConfig;
+
+    @NotNull
+    private DetectionParameters detectionParameters;
 
     @JsonProperty("database")
-    public DbConfig getDbConfig() { return this.dbConfig; }
+    public DatabaseConfig getDatabaseConfig() { return this.databaseConfig; }
 
     @JsonProperty("database")
-    public void setDbConfig(DbConfig dbConfig) {
-        this.dbConfig = dbConfig;
+    public void setDatabaseConfig(DatabaseConfig databaseConfig) {
+        this.databaseConfig = databaseConfig;
     }
 
-    @JsonProperty("sketchParameters")
-    public SketchParameters getSketchParameters() {
-        return this.sketchParameters;
+    @JsonProperty("sketchConfig")
+    public SketchConfig getSketchConfig() {
+        return this.sketchConfig;
     }
 
-    @JsonProperty("sketchParameters")
-    public void setSketchParameters(SketchParameters sketchParameters) { this.sketchParameters = sketchParameters; }
+    @JsonProperty("sketchConfig")
+    public void setSketchConfig(SketchConfig sketchConfig) { this.sketchConfig = sketchConfig; }
+
+    @JsonProperty("detectionParameters")
+    public DetectionParameters getDetectionParameters() {
+        return this.detectionParameters;
+    }
+
+    @JsonProperty("detectionParameters")
+    public void setDetectionParameters(DetectionParameters detectionParameters) { this.detectionParameters = detectionParameters; }
 
 }
