@@ -4,9 +4,9 @@ package com.lpineda.dsketch;
  * Created by leandro on 01/09/17.
  */
 
-import com.lpineda.dsketch.api.SketchParameters;
-import com.lpineda.dsketch.db.EventMapping;
-import com.lpineda.dsketch.db.SketchFactory;
+import com.lpineda.dsketch.api.DatabaseConfig;
+import com.lpineda.dsketch.api.DetectionParameters;
+import com.lpineda.dsketch.api.SketchConfig;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,25 +15,36 @@ import javax.validation.constraints.NotNull;
 public class EventReceiverConfiguration extends Configuration {
 
     @NotNull
-    private EventMapping eventMapping;
+    private DatabaseConfig databaseConfig;
 
     @NotNull
-    private SketchParameters sketchParameters;
+    private SketchConfig sketchConfig;
 
-    @JsonProperty("redis")
-    public EventMapping getEventMapping() { return this.eventMapping; }
+    @NotNull
+    private DetectionParameters detectionParameters;
 
-    @JsonProperty("redis")
-    public void setEventMapping(EventMapping eventMapping) {
-        this.eventMapping = eventMapping;
+    @JsonProperty("database")
+    public DatabaseConfig getDatabaseConfig() { return this.databaseConfig; }
+
+    @JsonProperty("database")
+    public void setDatabaseConfig(DatabaseConfig databaseConfig) {
+        this.databaseConfig = databaseConfig;
     }
 
-    @JsonProperty("sketchParameters")
-    public SketchParameters getSketchParameters() {
-        return this.sketchParameters;
+    @JsonProperty("sketchConfig")
+    public SketchConfig getSketchConfig() {
+        return this.sketchConfig;
     }
 
-    @JsonProperty("sketchParameters")
-    public void setSketchParameters(SketchParameters sketchParameters) { this.sketchParameters = sketchParameters; }
+    @JsonProperty("sketchConfig")
+    public void setSketchConfig(SketchConfig sketchConfig) { this.sketchConfig = sketchConfig; }
+
+    @JsonProperty("detectionParameters")
+    public DetectionParameters getDetectionParameters() {
+        return this.detectionParameters;
+    }
+
+    @JsonProperty("detectionParameters")
+    public void setDetectionParameters(DetectionParameters detectionParameters) { this.detectionParameters = detectionParameters; }
 
 }

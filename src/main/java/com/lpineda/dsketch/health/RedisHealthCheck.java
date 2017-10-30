@@ -1,29 +1,29 @@
 package com.lpineda.dsketch.health;
 
 import com.codahale.metrics.health.HealthCheck;
-import com.lpineda.dsketch.db.EventMapping;
+import com.lpineda.dsketch.db.RedisManager;
 
 /**
  * Created by leandro on 11/10/17.
  */
-public class EventMappingHealthCheck extends HealthCheck {
+public class RedisHealthCheck extends HealthCheck {
 
-    private final EventMapping mappings;
+    private final RedisManager redisManager;
 
-    public EventMappingHealthCheck(EventMapping mappings) {
-        this.mappings = mappings;
+    public RedisHealthCheck(RedisManager redisManager) {
+        this.redisManager = redisManager;
 
     }
     @Override
     protected Result check() throws Exception {
         try {
-            if (!mappings.ping().equals("PONG")) {
+            if (!redisManager.ping().equals("PONG")) {
                 throw new Exception("Couldn't connect to redis");
-            };
+            }
         } catch (Exception ex) {
             return Result.unhealthy(ex.getMessage());
         }
-        return Result.healthy("Keys: " + String.valueOf(mappings.getKeys()));
+        return Result.healthy();
     }
 
 }
