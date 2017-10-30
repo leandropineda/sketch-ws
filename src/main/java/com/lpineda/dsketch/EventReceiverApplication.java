@@ -1,16 +1,22 @@
 package com.lpineda.dsketch;
 
-import com.lpineda.dsketch.api.SketchParameters;
-import com.lpineda.dsketch.db.EventMapping;
-import com.lpineda.dsketch.db.SketchFactory;
-import com.lpineda.dsketch.health.EventMappingHealthCheck;
-import com.lpineda.dsketch.health.SketchParametersHealthCheck;
+import com.lpineda.dsketch.api.DetectionParameters;
+import com.lpineda.dsketch.api.SketchConfig;
+import com.lpineda.dsketch.core.*;
+import com.lpineda.dsketch.db.RedisManager;
+import com.lpineda.dsketch.db.KeyValueTransformer;
+import com.lpineda.dsketch.health.RedisHealthCheck;
 import com.lpineda.dsketch.resources.EventResource;
+import com.lpineda.dsketch.resources.Health;
+import com.lpineda.dsketch.resources.HeavyKeysResource;
+import com.lpineda.dsketch.resources.Status;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 /**
  * Created by leandro on 02/09/17.
@@ -19,6 +25,46 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventReceiverApplication.class);
 
+    private void doLogo() {
+        LOGGER.info("\n" +
+                "                                       ╓▓▌                                      \n" +
+                "                                      ╒▓▓▓▌                                     \n" +
+                "                                      ▓▓▓▓▓╕                                    \n" +
+                "                                     ║▓▓▓▓▓▓                                    \n" +
+                "                                     ▓▓▓▓▓▓▓▌                                   \n" +
+                "                                    ║▓▓▓▓▓▓▓▒╕                                  \n" +
+                "                                    ▓▓▓▓▓▓▓▓▓▓                                  \n" +
+                "                                   ╫▓▓▓▓▓▓▓▓▓▓ε                                 \n" +
+                "                                   ▓▓▓▓▓▓▓▓▓▓▓▓                                 \n" +
+                "                                  ╣▓▓▓▓▓▓▓▓▓▓▓▓▌                                \n" +
+                "                                 ]▓▓▓▓▓▓▓▓▓▓▓▓▓▓⌐                               \n" +
+                "                                 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▌                               \n" +
+                "                                ]▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓╕                              \n" +
+                "                                ▓▓▓▓▀░▓▓▓▓▓▓▓▓▓▓▓▓                              \n" +
+                "                               ╟▓▓▓▀░░░▓▓▓▓▓▓▓▓▓▓▓▌                             \n" +
+                "                              ]▓▓▓▓▓░░║▓▓▓▓▓▓▓▓▓▓▓▓⌐                            \n" +
+                "                              ▓▓▓▓▓▓▌║▓▓▓▓▓▓▓▓▓▓▓▓▓▌                            \n" +
+                "                             ▐▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓╕                           \n" +
+                "                             ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                           \n" +
+                "                            ╫▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▀▓▓▒▌                          \n" +
+                "                           ╓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░▀▓▓▓                          \n" +
+                "                           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░▓▓▓▌                         \n" +
+                "                          ╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░╣▓▓▓▒╕                        \n" +
+                "                         ╒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▌╣▓▓▓▓▓▓                        \n" +
+                "                         ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▌                       \n" +
+                "                        ▐▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                       \n" +
+                "                        ▓▓▓▓▓▓▓░╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▌                      \n" +
+                "                       ╣▓▓▓▓▓▓░░░╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒╕                     \n" +
+                "                      ]▓▓▓▓▓▓▓▌░░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                     \n" +
+                "                      ▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▄                    \n" +
+                "                     ╫▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓                    \n" +
+                "                    ╒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓╬▓▓▒▌                   \n" +
+                "                   ,▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓∩                  \n" +
+                "                  '╟▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▀░░░                  \n" +
+                "                    ░░░▀▀█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▀▀░░░░'                   \n" +
+                "                         '\"░░░▀▀▀▀▀▀████████▀▀▀▀▀▀░░░░'");
+
+    }
     @Override
     public String getName() {
         return "events-ws";
@@ -31,18 +77,46 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
     @Override
     public void run(EventReceiverConfiguration configuration, Environment environment) {
 
-        SketchParameters sketchParameters = configuration.getSketchParameters();
-        LOGGER.info("Initializing DB connection");
-        EventMapping mappings = configuration.getEventMapping();
-        mappings.connect();
-        LOGGER.info("Initializing Sketch factory");
-        SketchFactory sketchFactory = new SketchFactory(sketchParameters);
-        sketchFactory.setMappings(mappings);
+        this.doLogo();
 
-        final EventResource resource = new EventResource(sketchFactory);
-        environment.healthChecks().register("SketchParameters", new SketchParametersHealthCheck(sketchParameters));
-        environment.healthChecks().register("EventMapping", new EventMappingHealthCheck(mappings));
-        environment.jersey().register(resource);
+        SketchConfig sketchConfig = configuration.getSketchConfig();
+        DetectionParameters detectionParameters = configuration.getDetectionParameters();
+        RedisManager redisManager = new RedisManager(configuration.getDatabaseConfig().getAddress());
+
+        KeyValueTransformer keyValueTransformer = new KeyValueTransformer() {
+            @Override
+            public Integer getIntegerFromString(String value) {
+                return redisManager.getValue(value);
+            }
+
+            @Override
+            public Set<String> getStringFromInteger(Set<Integer> values) {
+                return redisManager.getStringMappings(values);
+            }
+        };
+
+        SketchHistory sketchHistory = new SketchHistory(2);
+
+        SketchManager sketchManager = new SketchManager(sketchConfig,
+                new SketchManager.RotationListener() {
+                    @Override
+                    public void onRotation(final Sketch sketch) {
+                        sketchHistory.addSketch(sketch);
+                    }
+                }, keyValueTransformer);
+
+        HeavyKeyDetectionHistory heavyKeyDetectionHistory = new HeavyKeyDetectionHistory(detectionParameters.getHeavyKeyHistoryMaxLength());
+        HeavyKeyDetector heavyKeyDetector = new HeavyKeyDetector(detectionParameters, keyValueTransformer, sketchHistory);
+        heavyKeyDetector.setHeavyKeyDetectionHistory(heavyKeyDetectionHistory);
+
+        DetectionScheduler detectionScheduler = new DetectionScheduler(detectionParameters, sketchManager, heavyKeyDetector);
+        detectionScheduler.start();
+
+        environment.healthChecks().register("Redis", new RedisHealthCheck(redisManager));
+        environment.jersey().register(new EventResource(sketchManager));
+        environment.jersey().register(new HeavyKeysResource(heavyKeyDetectionHistory));
+        environment.jersey().register(new Health(environment.healthChecks()));
+        environment.jersey().register(new Status(sketchConfig, detectionParameters, sketchHistory));
 
     }
 
