@@ -65,8 +65,8 @@ public class Bucket {
 
     }
 
-    public Range estimateElementFrequency(Integer element_) {
-        Range estimated_frequency = new Range();
+    public SumEstimation estimateElementFrequency(Integer element_) {
+        SumEstimation estimated_frequency = new SumEstimation();
         if (event_counter.containsKey(element_)) {
             estimated_frequency.from = event_counter.get(element_);
         } else estimated_frequency.from = Long.valueOf(0);

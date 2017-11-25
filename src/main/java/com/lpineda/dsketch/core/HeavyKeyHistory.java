@@ -21,7 +21,6 @@ public class HeavyKeyHistory {
         if (historyMaxLength <= 0)
             throw new NegativeArraySizeException("History length must be greater than zero.");
         this.historyMaxLength = historyMaxLength;
-        LOGGER.info(MessageFormat.format("Initializing HeavyKeyHistory: keeping {0} object(s).", this.historyMaxLength));
         this.heavyKeysHistory = new LinkedList<>();
     }
 

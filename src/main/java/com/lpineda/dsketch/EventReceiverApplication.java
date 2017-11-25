@@ -78,45 +78,50 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
     public void run(EventReceiverConfiguration configuration, Environment environment) {
 
         this.doLogo();
+        try {
+            SketchConfig sketchConfig = configuration.getSketchConfig();
+            DetectionParameters detectionParameters = configuration.getDetectionParameters();
+            RedisManager redisManager = new RedisManager(configuration.getDatabaseConfig().getAddress());
 
-        SketchConfig sketchConfig = configuration.getSketchConfig();
-        DetectionParameters detectionParameters = configuration.getDetectionParameters();
-        RedisManager redisManager = new RedisManager(configuration.getDatabaseConfig().getAddress());
+            KeyValueTransformer keyValueTransformer = new KeyValueTransformer() {
+                @Override
+                public Integer getValue(String event) {
+                    return redisManager.getValue(event);
+                }
 
-        KeyValueTransformer keyValueTransformer = new KeyValueTransformer() {
-            @Override
-            public Integer getIntegerFromString(String value) {
-                return redisManager.getValue(value);
-            }
+                @Override
+                public Set<String> getEvent(Set<Integer> value) {
+                    return redisManager.getStringMappings(value);
+                }
+            };
 
-            @Override
-            public Set<String> getStringFromInteger(Set<Integer> values) {
-                return redisManager.getStringMappings(values);
-            }
-        };
+            SketchHistory sketchHistory = new SketchHistory(2);
 
-        SketchHistory sketchHistory = new SketchHistory(2);
+            SketchManager sketchManager = new SketchManager(sketchConfig,
+                    new SketchManager.RotationListener() {
+                        @Override
+                        public void onRotation(final Sketch sketch) {
+                            sketchHistory.addSketch(sketch);
+                        }
+                    }, keyValueTransformer);
 
-        SketchManager sketchManager = new SketchManager(sketchConfig,
-                new SketchManager.RotationListener() {
-                    @Override
-                    public void onRotation(final Sketch sketch) {
-                        sketchHistory.addSketch(sketch);
-                    }
-                }, keyValueTransformer);
+            HeavyKeyDetectionHistory heavyKeyDetectionHistory = new HeavyKeyDetectionHistory(detectionParameters.getHeavyKeyHistoryMaxLength());
+            HeavyKeyDetector heavyKeyDetector = new HeavyKeyDetector(detectionParameters, keyValueTransformer, sketchHistory);
+            heavyKeyDetector.setHeavyKeyDetectionHistory(heavyKeyDetectionHistory);
 
-        HeavyKeyDetectionHistory heavyKeyDetectionHistory = new HeavyKeyDetectionHistory(detectionParameters.getHeavyKeyHistoryMaxLength());
-        HeavyKeyDetector heavyKeyDetector = new HeavyKeyDetector(detectionParameters, keyValueTransformer, sketchHistory);
-        heavyKeyDetector.setHeavyKeyDetectionHistory(heavyKeyDetectionHistory);
+            DetectionScheduler detectionScheduler = new DetectionScheduler(detectionParameters, sketchManager, heavyKeyDetector);
+            detectionScheduler.start();
+            environment.healthChecks().register("Redis", new RedisHealthCheck(redisManager));
+            environment.jersey().register(new EventResource(sketchManager));
+            environment.jersey().register(new HeavyKeysResource(heavyKeyDetectionHistory));
+            environment.jersey().register(new Health(environment.healthChecks()));
+            environment.jersey().register(new Status(sketchConfig, detectionParameters, sketchHistory));
 
-        DetectionScheduler detectionScheduler = new DetectionScheduler(detectionParameters, sketchManager, heavyKeyDetector);
-        detectionScheduler.start();
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage());
+            System.exit(1);
+        }
 
-        environment.healthChecks().register("Redis", new RedisHealthCheck(redisManager));
-        environment.jersey().register(new EventResource(sketchManager));
-        environment.jersey().register(new HeavyKeysResource(heavyKeyDetectionHistory));
-        environment.jersey().register(new Health(environment.healthChecks()));
-        environment.jersey().register(new Status(sketchConfig, detectionParameters, sketchHistory));
 
     }
 

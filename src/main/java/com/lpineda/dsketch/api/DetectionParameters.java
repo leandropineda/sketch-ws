@@ -26,4 +26,5 @@ public class DetectionParameters {
     public Long getHeavyKeyHistoryMaxLength() {
         return heavyKeyHistoryMaxLength;
     }
+
 }

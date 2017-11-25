@@ -1,7 +1,7 @@
 package com.lpineda.dsketch;
 
 import com.lpineda.dsketch.core.Bucket;
-import com.lpineda.dsketch.core.Range;
+import com.lpineda.dsketch.core.SumEstimation;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -73,7 +73,7 @@ public class BucketStepDefinitions {
             }
         }
 
-        Range estimated_frequency = bucket.estimateElementFrequency(maxEntry.getKey());
+        SumEstimation estimated_frequency = bucket.estimateElementFrequency(maxEntry.getKey());
 
         assertTrue(Math.abs(estimated_frequency.to - maxEntry.getValue()) <= 1);
         assertTrue((maxEntry.getValue() >= estimated_frequency.from && maxEntry.getValue() <= estimated_frequency.to));

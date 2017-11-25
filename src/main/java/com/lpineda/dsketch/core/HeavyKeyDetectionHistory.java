@@ -5,6 +5,7 @@ import com.lpineda.dsketch.api.HeavyKeysList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class HeavyKeyDetectionHistory {
@@ -14,6 +15,10 @@ public class HeavyKeyDetectionHistory {
     private final HeavyKeyHistory heavyChangers;
 
     public HeavyKeyDetectionHistory(Long historyMaxLength) {
+        LOGGER.info(MessageFormat.format("Initializing {0}", HeavyKeyDetectionHistory.class.getName()));
+        LOGGER.info(MessageFormat.format("Will maintain a history of {0} object(s).", historyMaxLength));
+
+
         this.heavyHitters = new HeavyKeyHistory(historyMaxLength);
         this.heavyChangers = new HeavyKeyHistory(historyMaxLength);
     }

@@ -20,11 +20,13 @@ public final class SketchHistory {
     private final AtomicLong sketchCounter;
 
     public SketchHistory(Integer historyMaxLength) {
+        LOGGER.info(MessageFormat.format("Initializing {0}", SketchHistory.class.getName()));
+
         if (historyMaxLength <= 0)
             throw new NegativeArraySizeException("History length must be greater than zero.");
         this.historyMaxLength = historyMaxLength;
         this.sketchCounter = new AtomicLong(0);
-        LOGGER.info(MessageFormat.format("Initializing SketchHistory: keeping {0} object(s).", this.historyMaxLength));
+        LOGGER.info(MessageFormat.format("Will maintain a history of {0} object(s).", this.historyMaxLength));
         this.sketchHistory = new TreeMap<>();
     }
 

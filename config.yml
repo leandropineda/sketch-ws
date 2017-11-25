@@ -1,10 +1,10 @@
 sketchConfig:
-  rows: 40
-  cols: 5
-  prime: 1337
+  rows: 5
+  cols: 100
+  prime: 7283
 detectionParameters:
-  heavyHitterThreshold: 100
-  heavyChangerThreshold: 50
+  heavyHitterThreshold: 250
+  heavyChangerThreshold: 200
   sketchRotationInterval: 3
   heavyKeyHistoryMaxLength: 1000
 
@@ -31,4 +31,4 @@ server:
 #docker run --rm --name redis -p 6379:6379 redis
 database:
   # The redis server's address; required.
-  address: "localhost"
+  address: "redis"

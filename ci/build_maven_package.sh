@@ -1,6 +1,7 @@
 #!/bin/bash
 
-REPO_DIR=$(readlink -f  ../)
+# run with JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8 option
+REPO_DIR=../
 
 pushd $REPO_DIR
 mvn clean package

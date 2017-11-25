@@ -31,6 +31,7 @@ public class HeavyKeyDetector {
     }
 
     public void setHeavyKeyDetectionHistory(HeavyKeyDetectionHistory heavyKeyDetectionHistory) {
+        LOGGER.info(MessageFormat.format("Initializing {0}", HeavyKeyDetector.class.getName()));
         this.heavyKeyDetectionHistory = heavyKeyDetectionHistory;
     }
 
@@ -48,8 +49,8 @@ public class HeavyKeyDetector {
         Integer heavyChangerThreshold = detectionParameters.getHeavyChangerThreshold();
         Set<Integer> heavyChangersInt = sketch.getHeavyChangers(heavyChangerThreshold, old_sketch);
 
-        Set<String> heavyHittersString = keyValueTransformer.getStringFromInteger(heavyHittersInt);
-        Set<String> heavyChangersString = keyValueTransformer.getStringFromInteger(heavyChangersInt);
+        Set<String> heavyHittersString = keyValueTransformer.getEvent(heavyHittersInt);
+        Set<String> heavyChangersString = keyValueTransformer.getEvent(heavyChangersInt);
 
         LOGGER.info("["+ sketchHistory.getCounter() +"]" +
                 " Heavy hitters: " + heavyHittersString +

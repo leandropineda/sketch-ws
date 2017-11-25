@@ -21,7 +21,7 @@ public class RedisManager {
     private final Logger LOGGER = LoggerFactory.getLogger(RedisManager.class);
 
     private final JedisPool jedisPool;
-    private final LoadingCache<String, Long> db_cache;
+    private final LoadingCache<String, Long> cache;
 
     public RedisManager(String db_address) {
         LOGGER.info(MessageFormat.format("Initializing {0}", RedisManager.class.getName()));
@@ -39,11 +39,13 @@ public class RedisManager {
         LOGGER.info(String.format("Initializing Jedis pool: %s", db_address));
         this.jedisPool = new JedisPool(poolConfig, db_address);
 
-        db_cache = CacheBuilder.newBuilder()
-                .maximumSize(1000)
+        Integer cache_size = 1000;
+        LOGGER.info(String.format("Initializing LoadingCache with size: %d", cache_size));
+        cache = CacheBuilder.newBuilder()
+                .maximumSize(cache_size)
                 .build(new CacheLoader<String, Long>() {
                     public Long load(String key) throws Exception {
-                        return addEvent(key);
+                        return getOrSet(key);
                     }
                 });
     }
@@ -62,36 +64,31 @@ public class RedisManager {
         }
     }
 
-    private Long addEvent(String key) {
-        LOGGER.debug("Retrieving key from redis " + key);
+    private Long getOrSet(String event) {
+        LOGGER.debug("Retrieving key from redis " + event);
         try (Jedis jedis = getJedisConnection()) {
-            // if the key is not already stored on the db
-            if (!jedis.sismember("keys", key)) {
-                // get the amount of keys stored on the db
-                Long n_keys = jedis.scard("keys");
-                // add the key to the key set 'keys'
-                jedis.sadd("keys", key);
+            try {
+                return Long.parseLong(jedis.hget("mappings", event));
+            } catch (Exception ex) { // the key is not stored on the db
+                Long newValue = jedis.hlen("mappings");
                 // map the new key with a new id
-                jedis.hset("mappings", key, String.valueOf(n_keys));
+                jedis.hset("mappings", event, String.valueOf(newValue));
                 // reverse map the id to the event
-                jedis.hset("reverse_mappings", String.valueOf(n_keys), key);
-                return n_keys;
-            } else {
-                // if the key exists, return its mapping
-                return Long.valueOf(jedis.hget("mappings", key));
+                jedis.hset("reverse_mappings", String.valueOf(newValue), event);
+                return newValue;
             }
         } catch (Exception ex) {
-            LOGGER.error("Error with key " + key);
+            LOGGER.error("Error with key " + event);
             LOGGER.error(ex.getMessage());
             throw ex;
         }
 
     }
 
-    public Integer getValue(String key)  {
+    public Integer getValue(String event)  {
         Integer value = -1;
         try {
-            value = Math.toIntExact(db_cache.get(key));
+            value = Math.toIntExact(cache.get(event));
         } catch (ExecutionException ex) {
             LOGGER.error(ex.getMessage());
             return -1;
