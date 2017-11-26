@@ -33,12 +33,21 @@ GET     /status (com.lpineda.dsketch.resources.Status)
 You can start submitting events to the service by submitting `POST` request with an `application-json` body to `http://localhost:8080/event`:
 
 ```
-{                     
+{
 	"event": "a_event"
 }
-
 ```
-
 To compile the code and generate Docker images, use `sketch-ws/ci/build_docker_image.sh`
 
-More at: [https://github.com/leandropineda/proyecto-final-de-carrera](https://github.com/leandropineda/proyecto-final-de-carrera)
+### Using jar file
+If you want to compile on your local machine, you can use the script `sketch-ws/ci/build_maven_package.sh`. Once it is compiled, you'll find the `jar` file on `target/sketchws-1.0-SNAPSHOT.jar`. To start the service, run the command:
+```
+$ java -jar sketchws-1.0-SNAPSHOT.jar server ../config.yml
+```
+You will need a Redis database running locally:
+```
+$ docker run --rm --name redis -p 6379:6379 redis
+```
+---
+
+More at: [https://github.com/leandropineda/proyecto-final-de-carrera](https://github.com/leandropineda/proyecto-final-de-carrera) (spanish)
