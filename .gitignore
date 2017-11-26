@@ -17,3 +17,5 @@ misc/apache_logs/apache.log
 ci/event_receiver_tmp/
 misc/pcap/bigFlows.pcap
 .idea/workspace.xml
+.DS_Store
+*.pyc
