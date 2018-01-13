@@ -1,15 +1,15 @@
 package com.lpineda.dsketch;
 
-import com.lpineda.dsketch.api.DetectionParameters;
-import com.lpineda.dsketch.api.SketchConfig;
+import com.lpineda.dsketch.api.*;
 import com.lpineda.dsketch.core.*;
-import com.lpineda.dsketch.db.RedisManager;
-import com.lpineda.dsketch.db.KeyValueTransformer;
+import com.lpineda.dsketch.data.*;
+import com.lpineda.dsketch.health.MosquittoHealthCheck;
 import com.lpineda.dsketch.health.RedisHealthCheck;
-import com.lpineda.dsketch.resources.EventResource;
-import com.lpineda.dsketch.resources.Health;
-import com.lpineda.dsketch.resources.HeavyKeysResource;
-import com.lpineda.dsketch.resources.Status;
+import com.lpineda.dsketch.jobs.DetectionScheduler;
+import com.lpineda.dsketch.core.HeavyKeyDetectionHistory;
+import com.lpineda.dsketch.jobs.HeavyKeyDetector;
+import com.lpineda.dsketch.jobs.SketchManager;
+import com.lpineda.dsketch.resources.*;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -79,9 +79,14 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
         this.doLogo();
         try {
+            // Get config parameters
             SketchConfig sketchConfig = configuration.getSketchConfig();
             DetectionParameters detectionParameters = configuration.getDetectionParameters();
-            RedisManager redisManager = new RedisManager(configuration.getDatabaseConfig().getAddress());
+            MessageBrokerConfig messageBrokerConfig = configuration.getMessageBrokerConfig();
+            DatabaseConfig databaseConfig = configuration.getDatabaseConfig();
+
+            // Database manager
+            RedisManager redisManager = new RedisManager(databaseConfig.getAddress());
 
             KeyValueTransformer keyValueTransformer = new KeyValueTransformer() {
                 @Override
@@ -95,30 +100,52 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
                 }
             };
 
+            //Initialize Sketch History
             SketchHistory sketchHistory = new SketchHistory(2);
 
-            SketchManager sketchManager = new SketchManager(sketchConfig,
-                    new SketchManager.RotationListener() {
-                        @Override
-                        public void onRotation(final Sketch sketch) {
-                            sketchHistory.addSketch(sketch);
-                        }
-                    }, keyValueTransformer);
+            SketchManager.RotationListener rotationListener = new SketchManager.RotationListener() {
+                @Override
+                public void onRotation(final Sketch sketch) {
+                    sketchHistory.addSketch(sketch);
+                }
+            };
 
-            HeavyKeyDetectionHistory heavyKeyDetectionHistory = new HeavyKeyDetectionHistory(detectionParameters.getHeavyKeyHistoryMaxLength());
-            HeavyKeyDetector heavyKeyDetector = new HeavyKeyDetector(detectionParameters, keyValueTransformer, sketchHistory);
-            heavyKeyDetector.setHeavyKeyDetectionHistory(heavyKeyDetectionHistory);
+            //Sketch manager
+            SketchManager sketchManager = new SketchManager(sketchConfig,
+                    rotationListener,
+                    keyValueTransformer);
+
+            HeavyKeyDetectionHistory heavyKeyDetectionHistory = new HeavyKeyDetectionHistory(
+                    detectionParameters.getHeavyKeyHistoryMaxLength());
+
+            //Heavy key detector
+            HeavyKeyDetector heavyKeyDetector = new HeavyKeyDetector(detectionParameters,
+                    keyValueTransformer,
+                    sketchHistory,
+                    heavyKeyDetectionHistory);
 
             DetectionScheduler detectionScheduler = new DetectionScheduler(detectionParameters, sketchManager, heavyKeyDetector);
             detectionScheduler.start();
+
+            MessageReceiver messageReceiver = new MessageReceiver() {
+                @Override
+                public Mapping onMessage(String evt) {
+                    return sketchManager.addEvent(evt);
+                }
+            };
+
+            MessageManager messageManager = new MessageManager(messageReceiver);
+
+            BrokerClient brokerClient = new BrokerClient(messageBrokerConfig, messageManager);
+
             environment.healthChecks().register("Redis", new RedisHealthCheck(redisManager));
-            environment.jersey().register(new EventResource(sketchManager));
+            environment.healthChecks().register("Mosquitto", new MosquittoHealthCheck(brokerClient));
             environment.jersey().register(new HeavyKeysResource(heavyKeyDetectionHistory));
             environment.jersey().register(new Health(environment.healthChecks()));
-            environment.jersey().register(new Status(sketchConfig, detectionParameters, sketchHistory));
+            environment.jersey().register(new Status(sketchConfig, detectionParameters, sketchHistory, sketchManager));
 
         } catch (Exception ex) {
-            LOGGER.error(ex.getMessage());
+            ex.printStackTrace();
             System.exit(1);
         }
 

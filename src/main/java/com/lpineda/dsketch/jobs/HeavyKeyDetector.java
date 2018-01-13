@@ -1,8 +1,10 @@
-package com.lpineda.dsketch.core;
+package com.lpineda.dsketch.jobs;
 
 import com.lpineda.dsketch.api.DetectionParameters;
-import com.lpineda.dsketch.api.HeavyKeysList;
-import com.lpineda.dsketch.db.KeyValueTransformer;
+import com.lpineda.dsketch.core.HeavyKeyDetectionHistory;
+import com.lpineda.dsketch.core.Sketch;
+import com.lpineda.dsketch.core.SketchHistory;
+import com.lpineda.dsketch.data.KeyValueTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,20 +22,22 @@ public class HeavyKeyDetector {
     private DetectionParameters detectionParameters;
     private KeyValueTransformer keyValueTransformer;
     private SketchHistory sketchHistory;
-    private HeavyKeyDetectionHistory heavyKeyDetectionHistory = null;
+    private HeavyKeyDetectionHistory heavyKeyDetectionHistory;
 
     public HeavyKeyDetector(DetectionParameters detectionParameters,
                             KeyValueTransformer keyValueTransformer,
-                            SketchHistory sketchHistory) {
+                            SketchHistory sketchHistory,
+                            HeavyKeyDetectionHistory heavyKeyDetectionHistory) {
         this.detectionParameters = detectionParameters;
         this.keyValueTransformer = keyValueTransformer;
         this.sketchHistory = sketchHistory;
-    }
-
-    public void setHeavyKeyDetectionHistory(HeavyKeyDetectionHistory heavyKeyDetectionHistory) {
-        LOGGER.info(MessageFormat.format("Initializing {0}", HeavyKeyDetector.class.getName()));
         this.heavyKeyDetectionHistory = heavyKeyDetectionHistory;
     }
+
+//    public void setHeavyKeyDetectionHistory(HeavyKeyDetectionHistory heavyKeyDetectionHistory) {
+//        LOGGER.info(MessageFormat.format("Initializing {0}", HeavyKeyDetector.class.getName()));
+//        this.heavyKeyDetectionHistory = heavyKeyDetectionHistory;
+//    }
 
     public void detectHeavyKeys() {
         if (this.sketchHistory.getCounter() < 2) {

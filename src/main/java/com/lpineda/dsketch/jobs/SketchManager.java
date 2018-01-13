@@ -1,9 +1,10 @@
-package com.lpineda.dsketch.core;
+package com.lpineda.dsketch.jobs;
 
 import com.google.common.cache.*;
 import com.lpineda.dsketch.api.Mapping;
 import com.lpineda.dsketch.api.SketchConfig;
-import com.lpineda.dsketch.db.KeyValueTransformer;
+import com.lpineda.dsketch.core.Sketch;
+import com.lpineda.dsketch.data.KeyValueTransformer;
 import org.apache.commons.math3.primes.Primes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by leandro on 25/10/17.
@@ -25,12 +27,11 @@ public class SketchManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(SketchManager.class);
 
     private final SketchConfig sketchConfig;
-
     private final KeyValueTransformer keyValueTransformer;
-
     private final LoadingCache<Integer, Sketch> currentSketch;
-
     private final Map<Integer, Integer> hash_functions;
+
+    private final AtomicLong processed_evts = new AtomicLong();
 
     public SketchManager(SketchConfig sketchConfig,
                          RotationListener rotationListener,
@@ -50,7 +51,7 @@ public class SketchManager {
             throw new Exception("Sketch \'cols\' must be minor than \'prime\'. Change it by editing the configuration file.");
         }
 
-        RemovalListener<Integer, Sketch> listener = new RemovalListener<Integer, Sketch>() {
+        RemovalListener<Integer, Sketch> listener_removal = new RemovalListener<Integer, Sketch>() {
             public void onRemoval(RemovalNotification<Integer, Sketch> notification) {
                 rotationListener.onRotation(notification.getValue());
             }
@@ -69,7 +70,7 @@ public class SketchManager {
 
         currentSketch = CacheBuilder.newBuilder()
                 .maximumSize(1)
-                .removalListener(listener)
+                .removalListener(listener_removal)
                 .build(loader);
 
     }
@@ -86,15 +87,26 @@ public class SketchManager {
         return this.currentSketch.get(0);
     }
 
-    protected void rotateSketch() throws ExecutionException {
+    public void rotateSketch() throws ExecutionException {
         this.currentSketch.invalidate(0);
         this.currentSketch.get(0);
     }
 
-    public Mapping addEvent(String event) throws ExecutionException {
+    public Mapping addEvent(String event) {
         Integer value = keyValueTransformer.getValue(event);
-        this.getCurrentSketch().addElement(value);
+        try {
+            this.getCurrentSketch().addElement(value);
+        } catch (ExecutionException ex) {
+            LOGGER.error("Execution exception thrown. Retrying.");
+            ex.printStackTrace();
+            this.addEvent(event);
+        }
+        this.processed_evts.incrementAndGet();
         return new Mapping(event, String.valueOf(value));
+    }
+
+    public Long getProcessedEvents() {
+        return this.processed_evts.longValue();
     }
 
 }

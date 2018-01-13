@@ -20,8 +20,8 @@ logging:
       timeZone: UTC
       target: stdout
     - type: file
-      currentLogFilename: /var/log/event-receiver.log
-      archivedLogFilenamePattern: /var/log/event-receiver-%d.log.gz
+      currentLogFilename: event-receiver.log
+      archivedLogFilenamePattern: event-receiver-%d.log.gz
       archivedFileCount: 5
 server:
   requestLog:
@@ -32,3 +32,6 @@ server:
 database:
   # The redis server's address; required.
   address: "redis"
+
+broker:
+  address: "tcp://localhost:1883"

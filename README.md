@@ -23,7 +23,6 @@ $ docker-compose up
 You will see how the service spins up. Available resources will be shown on the console:
 
 ```
-POST    /event (com.lpineda.dsketch.resources.EventResource)
 GET     /health (com.lpineda.dsketch.resources.Health)
 GET     /heavykeys (com.lpineda.dsketch.resources.HeavyKeysResource)
 GET     /heavykeys/heavychangers (com.lpineda.dsketch.resources.HeavyKeysResource)

@@ -1,4 +1,4 @@
-package com.lpineda.dsketch.core;
+package com.lpineda.dsketch.jobs;
 
 import com.lpineda.dsketch.api.DetectionParameters;
 import org.slf4j.Logger;

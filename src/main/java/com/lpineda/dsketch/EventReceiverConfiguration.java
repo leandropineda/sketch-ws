@@ -6,6 +6,7 @@ package com.lpineda.dsketch;
 
 import com.lpineda.dsketch.api.DatabaseConfig;
 import com.lpineda.dsketch.api.DetectionParameters;
+import com.lpineda.dsketch.api.MessageBrokerConfig;
 import com.lpineda.dsketch.api.SketchConfig;
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +17,9 @@ public class EventReceiverConfiguration extends Configuration {
 
     @NotNull
     private DatabaseConfig databaseConfig;
+
+    @NotNull
+    private MessageBrokerConfig messageBrokerConfig;
 
     @NotNull
     private SketchConfig sketchConfig;
@@ -30,6 +34,12 @@ public class EventReceiverConfiguration extends Configuration {
     public void setDatabaseConfig(DatabaseConfig databaseConfig) {
         this.databaseConfig = databaseConfig;
     }
+
+    @JsonProperty("broker")
+    public MessageBrokerConfig getMessageBrokerConfig() { return this.messageBrokerConfig; }
+
+    @JsonProperty("broker")
+    public void setMessageBrokerConfig(MessageBrokerConfig messageBrokerConfig) { this.messageBrokerConfig = messageBrokerConfig; }
 
     @JsonProperty("sketchConfig")
     public SketchConfig getSketchConfig() {

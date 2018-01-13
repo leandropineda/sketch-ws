@@ -1,14 +1,15 @@
 """pcap parser."""
 import dpkt
-import requests
+
 import socket
 import json
 import os
 from datetime import datetime
 import sched
 import time
+import paho.mqtt.publish as publish
 
-dataset = 'smallFlows.pcap'
+dataset = 'bigFlows.pcap'
 
 
 def print_str_date(ts, event):
@@ -43,10 +44,8 @@ for ts, pkt in dpkt.pcap.Reader(open(filename, 'r')):
             tcp.sport,
             socket.inet_ntoa(ip.dst),
             tcp.dport)
-        event = {
-            "event": flow
-        }
-        evt = (ts - initial_ts, json.dumps(event))
+
+        evt = (ts - initial_ts, flow)
         events.append(evt)
 
         if not (c % 1000):
@@ -54,30 +53,6 @@ for ts, pkt in dpkt.pcap.Reader(open(filename, 'r')):
         c += 1
 
 print "{} were processed.\n".format(c)
-print "Scheduled tasks should take: {} seconds".format(ts - initial_ts)
-
-
-from concurrent.futures import ThreadPoolExecutor
-from requests_futures.sessions import FuturesSession
-
-session = FuturesSession(executor=ThreadPoolExecutor(max_workers=16))
-
-
-def post_event(evt):
-    """Post an event."""
-
-    requests.post('http://localhost:8080/event',
-                  data=evt,
-                  headers={'content-type': 'application/json'})
-
-
-print "Running  tasks."
-t = time.time()
-for evt in events:
-
-    while time.time() - t < evt[0]:
-        continue
-    post_event(evt[1])
-
-t = time.time() - t
-print "Took {} seconds to run".format(t)
+with open('bigFlows.txt', 'w') as fd:
+    for e in events:
+        fd.write("{},{}\n".format(e[0], e[1]))

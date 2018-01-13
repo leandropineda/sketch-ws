@@ -2,11 +2,10 @@ package com.lpineda.dsketch.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lpineda.dsketch.api.HeavyKeysList;
+import com.lpineda.dsketch.jobs.HeavyKeysList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.MessageFormat;
 import java.util.*;
 
 public class HeavyKeyHistory {

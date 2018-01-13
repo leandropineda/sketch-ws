@@ -1,7 +1,7 @@
 package com.lpineda.dsketch.health;
 
 import com.codahale.metrics.health.HealthCheck;
-import com.lpineda.dsketch.db.RedisManager;
+import com.lpineda.dsketch.data.RedisManager;
 
 /**
  * Created by leandro on 11/10/17.
