@@ -16,7 +16,7 @@ print evts[:10]
 
 start_time = time.time()
 client = mqtt.Client()
-client.connect('192.168.55.104')
+client.connect('127.0.0.1')
 i = 0
 for e in evts:
     client.publish("events", e)
