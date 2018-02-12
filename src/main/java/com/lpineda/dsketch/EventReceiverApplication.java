@@ -81,7 +81,8 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
         try {
             SketchConfig sketchConfig = configuration.getSketchConfig();
             DetectionParameters detectionParameters = configuration.getDetectionParameters();
-            RedisManager redisManager = new RedisManager(configuration.getDatabaseConfig().getAddress());
+            RedisManager redisManager = new RedisManager(configuration.getDatabaseConfig().getAddress(),
+                    configuration.getDatabaseConfig().getCacheSize());
 
             KeyValueTransformer keyValueTransformer = new KeyValueTransformer() {
                 @Override

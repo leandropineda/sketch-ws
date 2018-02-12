@@ -23,7 +23,7 @@ public class RedisManager {
     private final JedisPool jedisPool;
     private final LoadingCache<String, Long> cache;
 
-    public RedisManager(String db_address) {
+    public RedisManager(String db_address, Integer cache_size) {
         LOGGER.info(MessageFormat.format("Initializing {0}", RedisManager.class.getName()));
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(128);
@@ -39,7 +39,6 @@ public class RedisManager {
         LOGGER.info(String.format("Initializing Jedis pool: %s", db_address));
         this.jedisPool = new JedisPool(poolConfig, db_address);
 
-        Integer cache_size = 1000;
         LOGGER.info(String.format("Initializing LoadingCache with size: %d", cache_size));
         cache = CacheBuilder.newBuilder()
                 .maximumSize(cache_size)
