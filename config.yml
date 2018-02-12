@@ -32,4 +32,4 @@ server:
 database:
   # The redis server's address; required.
   address: "redis"
-  cache_size": 1000
+  cache_size: 1000
