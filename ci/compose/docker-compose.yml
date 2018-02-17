@@ -1,7 +1,8 @@
 version: '3'
 services:
   receiver:
-    image: event_receiver
+    build:
+      context: ../Dockerfile-receiver
     ports:
     - "8080:8080"
     - "8081:8081"
@@ -9,3 +10,22 @@ services:
     - redis
   redis:
     image: redis
+
+  jmxtrans:
+    build:
+      context: ../Dockerfile-jmxtrans
+    environment:
+      JMX_HOST: receiver
+      JMX_PORT: 4000
+      STATSD_HOST: dashboard
+      STATSD_PORT: 8125
+    links:
+      - receiver
+      - dashboard
+  dashboard:
+    image: kamon/grafana_graphite
+    ports:
+      - "80:80"
+      - "81:81"
+      - "8125:8125/udp"
+      - "8126:8126"
