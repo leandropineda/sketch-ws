@@ -51,7 +51,7 @@ public class SketchManager {
             throw new Exception("Sketch \'cols\' must be minor than \'prime\'. Change it by editing the configuration file.");
         }
 
-        RemovalListener<Integer, Sketch> listener_removal = new RemovalListener<Integer, Sketch>() {
+        RemovalListener<Integer, Sketch> listener = new RemovalListener<Integer, Sketch>() {
             public void onRemoval(RemovalNotification<Integer, Sketch> notification) {
                 rotationListener.onRotation(notification.getValue());
             }
@@ -70,7 +70,7 @@ public class SketchManager {
 
         currentSketch = CacheBuilder.newBuilder()
                 .maximumSize(1)
-                .removalListener(listener_removal)
+                .removalListener(listener)
                 .build(loader);
 
     }

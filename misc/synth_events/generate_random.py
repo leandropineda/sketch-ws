@@ -32,38 +32,16 @@ def generate_events(n_events, universe_size):
         raw_events.append(str(random_n))
     return raw_events
 
-def initialize_results_file(file_path):
-    with open(file_path, 'w') as fd:
-        fd.close()
-
-def save_results_to_file(results, file_path):
-    assert os.path.exists(file_path)
-
-    with open(file_path, 'a') as fd:
-        fd.write('\n'.join([str(x) for x in results]))
-
-
 if __name__ == '__main__':
     # Config variables
     results_file_path = ''
-    simulation_time = 10
-    n_experiments = 50
-    n_events_per_experiment = 100000
+    n_events = 1000000
     universe_size = 10000
     
-    results_file_path += "results_n_events_{}_universe_size_{}.txt".format(n_events_per_experiment, universe_size)
-    initialize_results_file(results_file_path)
-    results = list()
-    for e in range(n_experiments):
-        noise_events = generate_events(n_events_per_experiment, universe_size)
-        t = time.time()
-        for i in range(len(noise_events)):
-            if time.time() - t > simulation_time:
-                print "{}/{} Elapsed {} seconds. Processed {} events.".format(e + 1, n_experiments, time.time() - t, i)
-                results.append(i)
-                break
-            post_event(noise_events[i])
-    save_results_to_file(results, results_file_path)
+    noise_events = generate_events(n_events, universe_size)
+    print "Posting events"
+    for i in range(n_events):
+        post_event(noise_events[i])
 
 
 
