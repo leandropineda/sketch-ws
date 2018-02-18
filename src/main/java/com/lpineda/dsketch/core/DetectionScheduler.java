@@ -42,6 +42,7 @@ public class DetectionScheduler {
                 try {
                     sketchManager.rotateSketch();
                     heavyKeyDetector.detectHeavyKeys();
+                    LOGGER.info(String.format("Processed %d events.", sketchManager.getProcessedEvents()));
                 } catch (ExecutionException ex) {
                     LOGGER.error(ex.getMessage());
                 }

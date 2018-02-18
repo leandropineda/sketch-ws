@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by leandro on 25/10/17.
@@ -31,6 +32,8 @@ public class SketchManager {
     private final LoadingCache<Integer, Sketch> currentSketch;
 
     private final Map<Integer, Integer> hash_functions;
+
+    private final AtomicLong processed_evts = new AtomicLong();
 
     public SketchManager(SketchConfig sketchConfig,
                          RotationListener rotationListener,
@@ -94,7 +97,13 @@ public class SketchManager {
     public Mapping addEvent(String event) throws ExecutionException {
         Integer value = keyValueTransformer.getValue(event);
         this.getCurrentSketch().addElement(value);
+        this.processed_evts.incrementAndGet();
         return new Mapping(event, String.valueOf(value));
     }
+
+    public Long getProcessedEvents() {
+        return this.processed_evts.longValue();
+    }
+
 
 }

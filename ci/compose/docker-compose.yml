@@ -1,7 +1,8 @@
 version: '3'
 services:
   receiver:
-    image: event_receiver
+    build:
+      context: ../Dockerfile-receiver
     ports:
     - "8080:8080"
     - "8081:8081"
