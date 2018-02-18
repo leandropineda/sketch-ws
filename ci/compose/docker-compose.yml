@@ -11,8 +11,6 @@ services:
     links:
       - redis
       - mosquitto
-    volumes:
-      - /Users/lpineda/workspace/sketch-ws/config.yml:/data/config.yml
   redis:
     image: redis
   mosquitto:

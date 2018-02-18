@@ -82,11 +82,12 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
             // Get config parameters
             SketchConfig sketchConfig = configuration.getSketchConfig();
             DetectionParameters detectionParameters = configuration.getDetectionParameters();
+
             MessageBrokerConfig messageBrokerConfig = configuration.getMessageBrokerConfig();
-            DatabaseConfig databaseConfig = configuration.getDatabaseConfig();
 
             // Database manager
-            RedisManager redisManager = new RedisManager(databaseConfig.getAddress());
+            RedisManager redisManager = new RedisManager(configuration.getDatabaseConfig().getAddress(),
+                    configuration.getDatabaseConfig().getCacheSize());
 
             KeyValueTransformer keyValueTransformer = new KeyValueTransformer() {
                 @Override

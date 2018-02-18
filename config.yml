@@ -32,6 +32,7 @@ server:
 database:
   # The redis server's address; required.
   address: "redis"
+  cache_size: 1000
 
 broker:
   address: "tcp://mosquitto:1883"
