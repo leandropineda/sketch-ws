@@ -1,9 +1,10 @@
-package com.lpineda.dsketch.core;
+package com.lpineda.dsketch.jobs;
 
 import com.google.common.cache.*;
 import com.lpineda.dsketch.api.Mapping;
 import com.lpineda.dsketch.api.SketchConfig;
-import com.lpineda.dsketch.db.KeyValueTransformer;
+import com.lpineda.dsketch.core.Sketch;
+import com.lpineda.dsketch.data.KeyValueTransformer;
 import org.apache.commons.math3.primes.Primes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,8 @@ public class SketchManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(SketchManager.class);
 
     private final SketchConfig sketchConfig;
-
     private final KeyValueTransformer keyValueTransformer;
-
     private final LoadingCache<Integer, Sketch> currentSketch;
-
     private final Map<Integer, Integer> hash_functions;
 
     private final AtomicLong processed_evts = new AtomicLong();
@@ -89,14 +87,20 @@ public class SketchManager {
         return this.currentSketch.get(0);
     }
 
-    protected void rotateSketch() throws ExecutionException {
+    public void rotateSketch() throws ExecutionException {
         this.currentSketch.invalidate(0);
         this.currentSketch.get(0);
     }
 
-    public Mapping addEvent(String event) throws ExecutionException {
+    public Mapping addEvent(String event) {
         Integer value = keyValueTransformer.getValue(event);
-        this.getCurrentSketch().addElement(value);
+        try {
+            this.getCurrentSketch().addElement(value);
+        } catch (ExecutionException ex) {
+            LOGGER.error("Execution exception thrown. Retrying.");
+            ex.printStackTrace();
+            this.addEvent(event);
+        }
         this.processed_evts.incrementAndGet();
         return new Mapping(event, String.valueOf(value));
     }
@@ -104,6 +108,5 @@ public class SketchManager {
     public Long getProcessedEvents() {
         return this.processed_evts.longValue();
     }
-
 
 }

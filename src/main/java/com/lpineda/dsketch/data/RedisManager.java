@@ -1,4 +1,4 @@
-package com.lpineda.dsketch.db;
+package com.lpineda.dsketch.data;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -39,6 +39,10 @@ public class RedisManager {
         LOGGER.info(String.format("Initializing Jedis pool: %s", db_address));
         this.jedisPool = new JedisPool(poolConfig, db_address);
 
+        if (this.ping().equals("PONG")) {
+            LOGGER.info("Connection to the database was successful");
+        }
+
         LOGGER.info(String.format("Initializing LoadingCache with size: %d", cache_size));
         cache = CacheBuilder.newBuilder()
                 .maximumSize(cache_size)
@@ -68,7 +72,7 @@ public class RedisManager {
         try (Jedis jedis = getJedisConnection()) {
             try {
                 return Long.parseLong(jedis.hget("mappings", event));
-            } catch (Exception ex) { // the key is not stored on the db
+            } catch (Exception ex) { // the key is not stored on the data
                 Long newValue = jedis.hlen("mappings");
                 // map the new key with a new id
                 jedis.hset("mappings", event, String.valueOf(newValue));

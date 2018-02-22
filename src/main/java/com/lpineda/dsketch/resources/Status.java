@@ -1,9 +1,9 @@
 package com.lpineda.dsketch.resources;
 
-import com.codahale.metrics.health.HealthCheck;
 import com.lpineda.dsketch.api.DetectionParameters;
 import com.lpineda.dsketch.api.SketchConfig;
 import com.lpineda.dsketch.core.SketchHistory;
+import com.lpineda.dsketch.jobs.SketchManager;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,21 +19,26 @@ public class Status {
     private final SketchConfig sketchConfig;
     private final DetectionParameters detectionParameters;
     private final SketchHistory sketchHistory;
+    private final SketchManager sketchManager;
 
     public Status(final SketchConfig sketchConfig,
                   final DetectionParameters detectionParameters,
-                  final SketchHistory sketchHistory) {
+                  final SketchHistory sketchHistory,
+                  final SketchManager sketchManager) {
 
         this.sketchConfig = sketchConfig;
         this.detectionParameters = detectionParameters;
         this.sketchHistory = sketchHistory;
+        this.sketchManager = sketchManager;
     }
+
     @GET
     public Map<String,Object> getStatus(){
         Map<String,Object> status = new HashMap<>();
         status.put("SketchConfig", Response.ok(sketchConfig).build().getEntity());
         status.put("DetectionParameters", Response.ok(detectionParameters).build().getEntity());
         status.put("SketchHistory", Response.ok(sketchHistory).build().getEntity());
+        status.put("SketchManager", Response.ok(sketchManager).build().getEntity());
         return status;
     }
 

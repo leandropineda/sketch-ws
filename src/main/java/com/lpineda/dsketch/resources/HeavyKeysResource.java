@@ -1,6 +1,6 @@
 package com.lpineda.dsketch.resources;
 
-import com.lpineda.dsketch.api.HeavyKeysList;
+import com.lpineda.dsketch.jobs.HeavyKeysList;
 import com.lpineda.dsketch.core.HeavyKeyDetectionHistory;
 
 import javax.ws.rs.*;

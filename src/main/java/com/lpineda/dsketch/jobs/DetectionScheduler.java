@@ -1,4 +1,4 @@
-package com.lpineda.dsketch.core;
+package com.lpineda.dsketch.jobs;
 
 import com.lpineda.dsketch.api.DetectionParameters;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class DetectionScheduler {
                 try {
                     sketchManager.rotateSketch();
                     heavyKeyDetector.detectHeavyKeys();
-                    LOGGER.info(String.format("Processed %d events.", sketchManager.getProcessedEvents()));
+                    LOGGER.info(String.format("Processed %d events", sketchManager.getProcessedEvents()));
                 } catch (ExecutionException ex) {
                     LOGGER.error(ex.getMessage());
                 }

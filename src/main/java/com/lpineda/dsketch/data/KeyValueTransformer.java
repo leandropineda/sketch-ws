@@ -1,7 +1,6 @@
-package com.lpineda.dsketch.db;
+package com.lpineda.dsketch.data;
 
 import java.util.Set;
-import java.util.SortedSet;
 
 public interface KeyValueTransformer {
     Integer getValue(String key);
