@@ -6,7 +6,6 @@ import com.lpineda.dsketch.data.*;
 import com.lpineda.dsketch.health.MosquittoHealthCheck;
 import com.lpineda.dsketch.health.RedisHealthCheck;
 import com.lpineda.dsketch.jobs.DetectionScheduler;
-import com.lpineda.dsketch.core.HeavyKeyDetectionHistory;
 import com.lpineda.dsketch.jobs.HeavyKeyDetector;
 import com.lpineda.dsketch.jobs.SketchManager;
 import com.lpineda.dsketch.resources.*;
@@ -119,12 +118,13 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
             };
 
             //Initialize Sketch History
-            SketchHistory sketchHistory = new SketchHistory(2);
+            SketchHistoryQueue sketchHistoryQueue = new SketchHistoryQueue(
+                    detectionParameters.getMaxHistoryQueueLength().intValue());
 
             SketchManager.RotationListener rotationListener = new SketchManager.RotationListener() {
                 @Override
-                public void onRotation(final Sketch sketch) {
-                    sketchHistory.addSketch(sketch);
+                public void onRotation(final Sketch sketch, final Integer epoch) {
+                    sketchHistoryQueue.addSketch(sketch, epoch);
                 }
             };
 
@@ -133,14 +133,15 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
                     rotationListener,
                     keyValueTransformer);
 
-            HeavyKeyDetectionHistory heavyKeyDetectionHistory = new HeavyKeyDetectionHistory(
-                    detectionParameters.getHeavyKeyHistoryMaxLength());
-
+            // Heavy key history
+            HeavyKeysHistoryQueue heavyKeysHistoryQueue = new HeavyKeysHistoryQueue(
+                    detectionParameters.getMaxHistoryQueueLength().intValue());
             //Heavy key detector
             HeavyKeyDetector heavyKeyDetector = new HeavyKeyDetector(detectionParameters,
                     keyValueTransformer,
-                    sketchHistory,
-                    heavyKeyDetectionHistory);
+                    sketchHistoryQueue,
+                    heavyKeysHistoryQueue,
+                    sketchManager);
 
             DetectionScheduler detectionScheduler = new DetectionScheduler(detectionParameters, sketchManager, heavyKeyDetector);
             detectionScheduler.start();
@@ -158,9 +159,11 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
             environment.healthChecks().register("Redis", new RedisHealthCheck(redisManager));
             environment.healthChecks().register("Mosquitto", new MosquittoHealthCheck(brokerClient));
-            environment.jersey().register(new HeavyKeysResource(heavyKeyDetectionHistory));
+            environment.jersey().register(new HeavyKeysHistoryResource(heavyKeysHistoryQueue));
+            environment.jersey().register(new SketchHistoryResource(sketchHistoryQueue));
             environment.jersey().register(new Health(environment.healthChecks()));
-            environment.jersey().register(new Status(sketchConfig, detectionParameters, sketchHistory, sketchManager));
+            environment.jersey().register(
+                    new Status(sketchConfig, detectionParameters, sketchManager, heavyKeyDetector));
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -1,5 +1,7 @@
 package com.lpineda.dsketch.jobs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.cache.*;
 import com.lpineda.dsketch.api.Mapping;
 import com.lpineda.dsketch.api.SketchConfig;
@@ -21,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class SketchManager {
 
     public interface RotationListener {
-        void onRotation(Sketch sketch);
+        void onRotation(Sketch sketch, Integer epoch);
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SketchManager.class);
@@ -31,7 +33,8 @@ public class SketchManager {
     private final LoadingCache<Integer, Sketch> currentSketch;
     private final Map<Integer, Integer> hash_functions;
 
-    private final AtomicLong processed_evts = new AtomicLong();
+    private final AtomicLong processedEvents = new AtomicLong();
+    private final AtomicLong epoch = new AtomicLong();
 
     public SketchManager(SketchConfig sketchConfig,
                          RotationListener rotationListener,
@@ -53,7 +56,7 @@ public class SketchManager {
 
         RemovalListener<Integer, Sketch> listener = new RemovalListener<Integer, Sketch>() {
             public void onRemoval(RemovalNotification<Integer, Sketch> notification) {
-                rotationListener.onRotation(notification.getValue());
+                rotationListener.onRotation(notification.getValue(), epoch.intValue());
             }
         };
 
@@ -83,6 +86,7 @@ public class SketchManager {
                 this.hash_functions);
     }
 
+    @JsonIgnore
     public Sketch getCurrentSketch() throws ExecutionException {
         return this.currentSketch.get(0);
     }
@@ -90,6 +94,7 @@ public class SketchManager {
     public void rotateSketch() throws ExecutionException {
         this.currentSketch.invalidate(0);
         this.currentSketch.get(0);
+        this.epoch.incrementAndGet();
     }
 
     public Mapping addEvent(String event) {
@@ -101,12 +106,18 @@ public class SketchManager {
             ex.printStackTrace();
             this.addEvent(event);
         }
-        this.processed_evts.incrementAndGet();
+        this.processedEvents.incrementAndGet();
         return new Mapping(event, String.valueOf(value));
     }
 
+    @JsonProperty
     public Long getProcessedEvents() {
-        return this.processed_evts.longValue();
+        return this.processedEvents.longValue();
+    }
+
+    @JsonProperty
+    public Long getCurrentEpoch() {
+        return this.epoch.longValue();
     }
 
 }

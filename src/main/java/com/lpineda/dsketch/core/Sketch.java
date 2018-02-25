@@ -3,6 +3,8 @@ package com.lpineda.dsketch.core;
 import java.text.MessageFormat;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.math3.primes.Primes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,10 @@ public class Sketch {
     private Map<Integer, Integer> hash_functions;
     private List<Bucket> matrix;
     public static int KEY_MAX_ALLOWED;
+    @JsonProperty
+    private Integer processed_elements;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy:MM:dd HH:mm:ss")
+    private Date creationDate;
 
     public Sketch(Integer d_, Integer w_, Integer p_, Map<Integer, Integer> hash_functions_) {
         LOGGER.debug(MessageFormat.format("Initializing {0}", Sketch.class.getName()));
@@ -38,6 +44,9 @@ public class Sketch {
         for (Integer i = 0; i < w * d; i++) {
             matrix.add(new Bucket(max_bucket_length));
         }
+
+        processed_elements = 0;
+        creationDate = new Date();
         LOGGER.debug(String.format("Sketch configuration. Height (rows): %d. Width (cols): %d. Prime: %d", d, w, p));
     }
 
@@ -80,6 +89,8 @@ public class Sketch {
         if (biggest_bucket_size > biggest_bucket_size_on_sketch) {
             biggest_bucket_size_on_sketch = biggest_bucket_size;
         }
+
+        processed_elements = processed_elements + 1;
     }
 
     public Long getBiggestBucketCounter() {

@@ -24,9 +24,9 @@ You will see how the service spins up. Available resources will be shown on the 
 
 ```
 GET     /health (com.lpineda.dsketch.resources.Health)
-GET     /heavykeys (com.lpineda.dsketch.resources.HeavyKeysResource)
-GET     /heavykeys/heavychangers (com.lpineda.dsketch.resources.HeavyKeysResource)
-GET     /heavykeys/heavyhitters (com.lpineda.dsketch.resources.HeavyKeysResource)
+GET     /heavykeys (com.lpineda.dsketch.resources.HeavyKeysHistoryResource)
+GET     /heavykeys/heavychangers (com.lpineda.dsketch.resources.HeavyKeysHistoryResource)
+GET     /heavykeys/heavyhitters (com.lpineda.dsketch.resources.HeavyKeysHistoryResource)
 GET     /status (com.lpineda.dsketch.resources.Status)
 ```
 You can start submitting events to the service by submitting `POST` request with an `application-json` body to `http://localhost:8080/event`:
