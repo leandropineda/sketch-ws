@@ -18,24 +18,13 @@ public class HeavyKeysHistoryResource {
     }
 
     @GET
-    @Path("/heavyhitters")
     public Map<String, NavigableMap<Integer, HeavyKeys>> getHeavyHitters(@QueryParam("count") final String count) {
         Map<String, NavigableMap<Integer, HeavyKeys>> resource_map = new HashMap<>();
         if (count == null)
-            resource_map.put("HeavyHitters", this.heavyKeysHistoryQueue.getHeavyHitters(0));
+            resource_map.put("HeavyHitters", this.heavyKeysHistoryQueue.getHeavyKeys(0));
         else
-            resource_map.put("HeavyHitters", this.heavyKeysHistoryQueue.getHeavyHitters(Integer.valueOf(count)));
+            resource_map.put("HeavyHitters", this.heavyKeysHistoryQueue.getHeavyKeys(Integer.valueOf(count)));
         return resource_map;
     }
 
-    @GET
-    @Path("/heavychangers")
-    public  Map<String, NavigableMap<Integer, HeavyKeys>> getHeavyChangers(@QueryParam("count") final String count) {
-        Map<String, NavigableMap<Integer, HeavyKeys>> resource_map = new HashMap<>();
-        if (count == null)
-            resource_map.put("HeavyChangers", this.heavyKeysHistoryQueue.getHeavyChangers(0));
-        else
-            resource_map.put("HeavyChangers", this.heavyKeysHistoryQueue.getHeavyChangers(Integer.valueOf(count)));
-        return resource_map;
-    }
 }

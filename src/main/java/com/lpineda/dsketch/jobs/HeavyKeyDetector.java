@@ -74,9 +74,8 @@ public class HeavyKeyDetector {
 
         if (this.heavyKeysHistoryQueue != null) {
             Date date = new Date();
-            HeavyKeys heavyHitters = new HeavyKeys(date, new ArrayList<>(heavyHittersString));
-            HeavyKeys heavyChangers = new HeavyKeys(date, new ArrayList<>(heavyChangersString));
-            this.heavyKeysHistoryQueue.addHeavyKeys(heavyHitters, heavyChangers, epoch);
+            HeavyKeys heavyKeys = new HeavyKeys(date, new ArrayList<>(heavyHittersString), new ArrayList<>(heavyChangersString));
+            this.heavyKeysHistoryQueue.addHeavyKeys(heavyKeys, epoch);
         }
 
     }

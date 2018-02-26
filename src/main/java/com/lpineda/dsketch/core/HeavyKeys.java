@@ -12,17 +12,23 @@ import java.util.List;
 public class HeavyKeys {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeavyKeys.class);
 
-    @JsonProperty("keys")
-    private final List<String> heavyKeys;
+    @JsonProperty("heavyHitters")
+    private final List<String> heavyHitters;
+    @JsonProperty("heavyChangers")
+    private final List<String> heavyChangers;
     @JsonProperty
-    private final Integer counter;
+    private final Integer heavyHittersCounter;
+    @JsonProperty
+    private final Integer heavyChangersCounter;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy:MM:dd HH:mm:ss")
     private final Date detectionDate;
 
-    public HeavyKeys(Date detectionDate, List<String> heavyKeys) {
+    public HeavyKeys(Date detectionDate, List<String> heavyHitters, List<String> heavyChangers) {
         LOGGER.debug(MessageFormat.format("Initializing {0}", HeavyKeys.class.getName()));
-        this.heavyKeys = heavyKeys;
-        this.counter = this.heavyKeys.size();
+        this.heavyHitters = heavyHitters;
+        this.heavyChangers = heavyChangers;
+        this.heavyHittersCounter = this.heavyHitters.size();
+        this.heavyChangersCounter = this.heavyChangers.size();
         this.detectionDate = detectionDate;
     }
 
