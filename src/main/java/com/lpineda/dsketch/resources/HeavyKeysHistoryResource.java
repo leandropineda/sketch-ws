@@ -21,9 +21,9 @@ public class HeavyKeysHistoryResource {
     public Map<String, NavigableMap<Integer, HeavyKeys>> getHeavyHitters(@QueryParam("count") final String count) {
         Map<String, NavigableMap<Integer, HeavyKeys>> resource_map = new HashMap<>();
         if (count == null)
-            resource_map.put("HeavyHitters", this.heavyKeysHistoryQueue.getHeavyKeys(0));
+            resource_map.put("HeavyKeys", this.heavyKeysHistoryQueue.getHeavyKeys(0));
         else
-            resource_map.put("HeavyHitters", this.heavyKeysHistoryQueue.getHeavyKeys(Integer.valueOf(count)));
+            resource_map.put("HeavyKeys", this.heavyKeysHistoryQueue.getHeavyKeys(Integer.valueOf(count)));
         return resource_map;
     }
 

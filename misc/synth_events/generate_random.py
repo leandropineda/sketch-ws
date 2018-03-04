@@ -26,9 +26,9 @@ if __name__ == '__main__':
     universe_size = 10000
 
     noise_events = generate_events(n_events, universe_size)
-
+    print("Connecting...")
     client = mqtt.Client()
-    client.connect('127.0.0.1')
+    client.connect('mosquitto')
     print "Connected"
 
     print "Publishing events"

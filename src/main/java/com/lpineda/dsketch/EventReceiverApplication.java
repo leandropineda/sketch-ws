@@ -13,6 +13,9 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,16 +149,8 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
             DetectionScheduler detectionScheduler = new DetectionScheduler(detectionParameters, sketchManager, heavyKeyDetector);
             detectionScheduler.start();
 
-            MessageReceiver messageReceiver = new MessageReceiver() {
-                @Override
-                public Mapping onMessage(String evt) {
-                    return sketchManager.addEvent(evt);
-                }
-            };
 
-            MessageManager messageManager = new MessageManager(messageReceiver);
-
-            BrokerClient brokerClient = new BrokerClient(messageBrokerConfig, messageManager);
+            BrokerClient brokerClient = new BrokerClient(messageBrokerConfig, sketchManager);
 
             environment.healthChecks().register("Redis", new RedisHealthCheck(redisManager));
             environment.healthChecks().register("Mosquitto", new MosquittoHealthCheck(brokerClient));
