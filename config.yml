@@ -5,8 +5,8 @@ sketchConfig:
 detectionParameters:
   heavyHitterThreshold: 700
   heavyChangerThreshold: 500
-  sketchRotationInterval: 3
-  heavyKeyHistoryMaxLength: 1000
+  sketchRotationInterval: 2
+  maxHistoryQueueLength: 1000
 
 logging:
   level: INFO

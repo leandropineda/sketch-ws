@@ -2,7 +2,9 @@ package com.lpineda.dsketch.resources;
 
 import com.lpineda.dsketch.api.DetectionParameters;
 import com.lpineda.dsketch.api.SketchConfig;
-import com.lpineda.dsketch.core.SketchHistory;
+import com.lpineda.dsketch.core.HeavyKeys;
+import com.lpineda.dsketch.core.HeavyKeysHistoryQueue;
+import com.lpineda.dsketch.jobs.HeavyKeyDetector;
 import com.lpineda.dsketch.jobs.SketchManager;
 
 import javax.ws.rs.GET;
@@ -18,18 +20,18 @@ public class Status {
 
     private final SketchConfig sketchConfig;
     private final DetectionParameters detectionParameters;
-    private final SketchHistory sketchHistory;
     private final SketchManager sketchManager;
+    private final HeavyKeyDetector heavyKeyDetector;
 
     public Status(final SketchConfig sketchConfig,
                   final DetectionParameters detectionParameters,
-                  final SketchHistory sketchHistory,
-                  final SketchManager sketchManager) {
+                  final SketchManager sketchManager,
+                  final HeavyKeyDetector heavyKeyDetector) {
 
         this.sketchConfig = sketchConfig;
         this.detectionParameters = detectionParameters;
-        this.sketchHistory = sketchHistory;
         this.sketchManager = sketchManager;
+        this.heavyKeyDetector = heavyKeyDetector;
     }
 
     @GET
@@ -37,8 +39,8 @@ public class Status {
         Map<String,Object> status = new HashMap<>();
         status.put("SketchConfig", Response.ok(sketchConfig).build().getEntity());
         status.put("DetectionParameters", Response.ok(detectionParameters).build().getEntity());
-        status.put("SketchHistory", Response.ok(sketchHistory).build().getEntity());
         status.put("SketchManager", Response.ok(sketchManager).build().getEntity());
+        status.put("HeavyKeyDetector", Response.ok(heavyKeyDetector).build().getEntity());
         return status;
     }
 

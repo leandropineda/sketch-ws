@@ -8,7 +8,7 @@ public class DetectionParameters {
     private Integer heavyHitterThreshold;
     private Integer heavyChangerThreshold;
     private Long sketchRotationInterval;
-    private Long heavyKeyHistoryMaxLength;
+    private Long maxHistoryQueueLength;
 
     public void setHeavyHitterThreshold(Integer heavyHitterThreshold) { this.heavyHitterThreshold = heavyHitterThreshold; }
     public Integer getHeavyHitterThreshold() { return this.heavyHitterThreshold; }
@@ -19,12 +19,12 @@ public class DetectionParameters {
     public void setSketchRotationInterval(Long sketchRotationInterval) { this.sketchRotationInterval = sketchRotationInterval; }
     public Long getSketchRotationInterval() { return sketchRotationInterval; }
 
-    public void setHeavyKeyHistoryMaxLength(Long heavyKeyHistoryMaxLength) {
-        this.heavyKeyHistoryMaxLength = heavyKeyHistoryMaxLength;
+    public void setMaxHistoryQueueLength(Long maxHistoryQueueLength) {
+        this.maxHistoryQueueLength = maxHistoryQueueLength;
     }
 
-    public Long getHeavyKeyHistoryMaxLength() {
-        return heavyKeyHistoryMaxLength;
+    public Long getMaxHistoryQueueLength() {
+        return maxHistoryQueueLength;
     }
 
 }
