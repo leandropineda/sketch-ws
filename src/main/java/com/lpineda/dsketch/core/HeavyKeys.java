@@ -32,4 +32,11 @@ public class HeavyKeys {
         this.detectionDate = detectionDate;
     }
 
+    public List<String> getHeavyHitters() {
+        return this.heavyHitters;
+    }
+
+    public List<String> getHeavyChangers() {
+        return heavyChangers;
+    }
 }
