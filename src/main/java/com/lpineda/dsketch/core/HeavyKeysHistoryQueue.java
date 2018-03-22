@@ -38,9 +38,13 @@ public class HeavyKeysHistoryQueue {
         this.heavyKeys.put(epoch, heavyKeys);
     }
 
+    public NavigableMap<Integer, HeavyKeys> getHeavyKeys() {
+        return this.heavyKeys;
+    }
+
     public NavigableMap<Integer, HeavyKeys> getHeavyKeys(Integer count) {
-        if (count > this.heavyKeys.size() || count == 0)
-            return this.heavyKeys;
+        if (count > this.heavyKeys.size())
+            return this.getHeavyKeys();
         Integer higherEpoch = this.heavyKeys.lastEntry().getKey();
         return this.heavyKeys.subMap(higherEpoch - count, false, higherEpoch, true);
     }
