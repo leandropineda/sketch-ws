@@ -1,8 +1,8 @@
 version: '3'
 services:
-  receiver:
+  sketch-ws:
     build:
-      context: ../Dockerfile-receiver
+      context: ../Dockerfile-sketch-ws
     ports:
       - "8080:8080"
       - "8081:8081"
