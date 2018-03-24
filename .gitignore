@@ -19,3 +19,5 @@ misc/pcap/bigFlows.pcap
 .idea/workspace.xml
 .DS_Store
 *.pyc
+ci/Dockerfile-receiver/sketchws-1.0-SNAPSHOT.jar
+ci/Dockerfile-receiver/config.yml
