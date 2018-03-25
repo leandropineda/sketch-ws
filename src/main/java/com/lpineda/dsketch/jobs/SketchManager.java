@@ -126,6 +126,7 @@ public class SketchManager {
         return this.epoch.longValue();
     }
 
+    @JsonIgnore
     public Float getEventsProcessingSpeed() {
         if (this.processedEventsEpoch.size() <= 2)
             return Float.valueOf(0);
