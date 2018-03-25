@@ -79,4 +79,9 @@ public class HeavyKeyDetector {
         }
 
     }
+
+    @JsonProperty
+    public Float getEventsProcessingSpeed() {
+        return this.sketchManager.getEventsProcessingSpeed() / this.detectionParameters.getSketchRotationInterval();
+    }
 }

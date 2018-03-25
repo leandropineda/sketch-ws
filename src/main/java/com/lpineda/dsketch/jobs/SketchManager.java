@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -34,6 +34,8 @@ public class SketchManager {
     private final Map<Integer, Integer> hash_functions;
 
     private final AtomicLong processedEvents = new AtomicLong();
+    private final ArrayList<Integer> processedEventsEpoch = new ArrayList<>();
+
     private final AtomicLong epoch = new AtomicLong();
 
     public SketchManager(SketchConfig sketchConfig,
@@ -94,6 +96,10 @@ public class SketchManager {
     public void rotateSketch() throws ExecutionException {
         this.currentSketch.invalidate(0);
         this.currentSketch.get(0);
+        if (this.processedEventsEpoch.size() == 3)
+            this.processedEventsEpoch.remove(0);
+        this.processedEventsEpoch.add(this.processedEvents.intValue());
+
         this.epoch.incrementAndGet();
     }
 
@@ -118,6 +124,14 @@ public class SketchManager {
     @JsonProperty
     public Long getCurrentEpoch() {
         return this.epoch.longValue();
+    }
+
+    public Float getEventsProcessingSpeed() {
+        if (this.processedEventsEpoch.size() <= 2)
+            return Float.valueOf(0);
+        Integer a = this.processedEventsEpoch.get(1) - this.processedEventsEpoch.get(0);
+        Integer b = this.processedEventsEpoch.get(2) - this.processedEventsEpoch.get(1);
+        return Float.valueOf((a+b) / 2);
     }
 
 }
