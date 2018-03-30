@@ -12,10 +12,13 @@ import com.lpineda.dsketch.resources.*;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.prometheus.client.CollectorRegistry;
+import io.prometheus.client.dropwizard.DropwizardExports;
+import io.prometheus.client.exporter.MetricsServlet;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +88,6 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
 
         this.doLogo();
 
-
         final FilterRegistration.Dynamic cors =
                 environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 
@@ -149,7 +151,6 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
             DetectionScheduler detectionScheduler = new DetectionScheduler(detectionParameters, sketchManager, heavyKeyDetector);
             detectionScheduler.start();
 
-
             BrokerClient brokerClient = new BrokerClient(messageBrokerConfig, sketchManager);
 
             environment.healthChecks().register("Redis", new RedisHealthCheck(redisManager));
@@ -160,11 +161,19 @@ public class EventReceiverApplication extends Application<EventReceiverConfigura
             environment.jersey().register(
                     new Status(sketchConfig, detectionParameters, sketchManager, heavyKeyDetector));
 
+            environment.getApplicationContext()
+                    .getServletHandler()
+                    .addServletWithMapping(new ServletHolder(new MetricsServlet()), "/metrics");
+            CollectorRegistry collectorRegistry = new CollectorRegistry();
+            collectorRegistry.register(new DropwizardExports(environment.metrics()));
+            environment.getApplicationContext()
+                    .getServletHandler()
+                    .addServletWithMapping(new ServletHolder(new MetricsServlet(collectorRegistry)), "/dropwizardMetrics");
+
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
         }
-
 
     }
 

@@ -7,6 +7,8 @@ import com.lpineda.dsketch.api.Mapping;
 import com.lpineda.dsketch.api.SketchConfig;
 import com.lpineda.dsketch.core.Sketch;
 import com.lpineda.dsketch.data.KeyValueTransformer;
+import io.prometheus.client.Gauge;
+import io.prometheus.client.Histogram;
 import org.apache.commons.math3.primes.Primes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,13 +95,16 @@ public class SketchManager {
         return this.currentSketch.get(0);
     }
 
-    public void rotateSketch() throws ExecutionException {
-        this.currentSketch.invalidate(0);
-        this.currentSketch.get(0);
+    public void addProcessedEventsToHistory() {
         if (this.processedEventsEpoch.size() == 3)
             this.processedEventsEpoch.remove(0);
         this.processedEventsEpoch.add(this.processedEvents.intValue());
+    }
 
+    public void rotateSketch() throws ExecutionException {
+        this.currentSketch.invalidate(0);
+        this.currentSketch.get(0);
+        this.addProcessedEventsToHistory();
         this.epoch.incrementAndGet();
     }
 
@@ -127,12 +132,12 @@ public class SketchManager {
     }
 
     @JsonIgnore
-    public Float getEventsProcessingSpeed() {
+    public Integer getEventsProcessingSpeed() {
         if (this.processedEventsEpoch.size() <= 2)
-            return Float.valueOf(0);
+            return 0;
         Integer a = this.processedEventsEpoch.get(1) - this.processedEventsEpoch.get(0);
         Integer b = this.processedEventsEpoch.get(2) - this.processedEventsEpoch.get(1);
-        return Float.valueOf((a+b) / 2);
+        return Math.round((a+b) / 2);
     }
 
 }
