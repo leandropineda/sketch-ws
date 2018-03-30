@@ -5,6 +5,10 @@ import com.lpineda.dsketch.api.DetectionParameters;
 import com.lpineda.dsketch.core.*;
 import com.lpineda.dsketch.data.KeyValueTransformer;
 import com.sun.org.apache.xerces.internal.xs.StringList;
+import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
+import io.prometheus.client.Histogram;
+import io.prometheus.client.Summary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +35,13 @@ public class HeavyKeyDetector {
     @JsonProperty
     private Integer detectedHeavyChangers = 0;
 
+    private static final Gauge eventsProcessingSpeed = Gauge.build()
+            .name("processed_events_per_second").help("Processed events per second").register();
+    private static final Gauge detectedHeavyHittersMeter = Gauge.build()
+            .name("detected_heavy_hitters_per_epoch").help("Detected heavy hitters per epoch").register();
+    private static final Gauge detectedHeavyChangersMeter = Gauge.build()
+            .name("detected_heavy_changers_per_epoch").help("Detected heavy changers per epoch").register();
+
     public HeavyKeyDetector(DetectionParameters detectionParameters,
                             KeyValueTransformer keyValueTransformer,
                             SketchHistoryQueue sketchHistoryQueue,
@@ -42,11 +53,6 @@ public class HeavyKeyDetector {
         this.heavyKeysHistoryQueue = heavyKeysHistoryQueue;
         this.sketchManager = sketchManager;
     }
-
-//    public void setHeavyKeyDetectionHistory(HeavyKeys heavyKeys) {
-//        LOGGER.info(MessageFormat.format("Initializing {0}", HeavyKeyDetector.class.getName()));
-//        this.heavyKeys = heavyKeys;
-//    }
 
     public void detectHeavyKeys() {
         if (this.sketchHistoryQueue.size() < 2) {
@@ -63,6 +69,9 @@ public class HeavyKeyDetector {
 
         this.detectedHeavyHitters += heavyHittersInt.size();
         this.detectedHeavyChangers += heavyChangersInt.size();
+        eventsProcessingSpeed.set(this.getEventsProcessingSpeed());
+        detectedHeavyHittersMeter.set(heavyHittersInt.size());
+        detectedHeavyChangersMeter.set(heavyChangersInt.size());
 
         Set<String> heavyHittersString = keyValueTransformer.getEvent(heavyHittersInt);
         Set<String> heavyChangersString = keyValueTransformer.getEvent(heavyChangersInt);
@@ -81,7 +90,8 @@ public class HeavyKeyDetector {
     }
 
     @JsonProperty
-    public Integer getEventsProcessingSpeed() {
-        return Math.round(this.sketchManager.getEventsProcessingSpeed() / this.detectionParameters.getSketchRotationInterval());
+    private Integer getEventsProcessingSpeed() {
+        return Math.round(this.sketchManager.getEventsProcessingSpeed()
+                / this.detectionParameters.getSketchRotationInterval());
     }
 }

@@ -21,6 +21,9 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /tmp:/mosquitto/data
 
   prometheus:
     image: prom/prometheus:v2.2.1
@@ -46,12 +49,16 @@ services:
       - "3000:3000"
     volumes:
       - ./provisioning:/etc/grafana/provisioning
-
+      - ./dashboards:/var/lib/grafana/dashboards
 
   cadvisor-exporter:
     image: google/cadvisor
     ports:
       - "9200:8080"
+    command:
+      - "--housekeeping_interval=5s"
+      - "--allow_dynamic_housekeeping=false"
+      - "--global_housekeeping_interval=1m0s"
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:rw"
