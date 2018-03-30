@@ -127,12 +127,12 @@ public class SketchManager {
     }
 
     @JsonIgnore
-    public Float getEventsProcessingSpeed() {
+    public Integer getEventsProcessingSpeed() {
         if (this.processedEventsEpoch.size() <= 2)
-            return Float.valueOf(0);
+            return 0;
         Integer a = this.processedEventsEpoch.get(1) - this.processedEventsEpoch.get(0);
         Integer b = this.processedEventsEpoch.get(2) - this.processedEventsEpoch.get(1);
-        return Float.valueOf((a+b) / 2);
+        return Math.round((a+b) / 2);
     }
 
 }

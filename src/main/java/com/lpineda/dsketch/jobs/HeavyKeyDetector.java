@@ -81,7 +81,7 @@ public class HeavyKeyDetector {
     }
 
     @JsonProperty
-    public Float getEventsProcessingSpeed() {
-        return this.sketchManager.getEventsProcessingSpeed() / this.detectionParameters.getSketchRotationInterval();
+    public Integer getEventsProcessingSpeed() {
+        return Math.round(this.sketchManager.getEventsProcessingSpeed() / this.detectionParameters.getSketchRotationInterval());
     }
 }
